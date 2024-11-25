@@ -3,7 +3,7 @@ import '../global.css'
 
 export default function Layout() {
     return(
-        <Stack>
+        <Stack screenOptions={{headerShown: false}}>
             <Stack.Screen name="index"/>
         </Stack>
     )
