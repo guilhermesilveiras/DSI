@@ -1,7 +1,6 @@
 import { Pressable, Text, TextInput, View } from "react-native"
 import { InputType } from "../../types/input"
 import Icon from "@expo/vector-icons/FontAwesome6"
-import { useState } from "react"
 
 
 export const Input = (props: InputType)=> {

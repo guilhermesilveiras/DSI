@@ -1,13 +1,18 @@
 import { LinearGradient } from "expo-linear-gradient"
 import { Pressable, Text } from "react-native"
+import { ButtonInputType } from "../../types/button-input"
+import { router } from "expo-router"
 
-type Props = {
-    label: string
-}
 
-export const ButtonInput = ({label}: Props)=> {
+export const ButtonInput = ({label, route}: ButtonInputType)=> {
+
+    const handlePress = ()=> {
+        router.replace(route)
+    }
+
     return(
         <Pressable
+            onPress={handlePress}
             className="w-52 rounded-xl overflow-hidden"
         >
             <LinearGradient 

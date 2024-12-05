@@ -1,18 +1,50 @@
-import { Image, SafeAreaView, ScrollView, Text, View } from "react-native"
-import Icon from "@expo/vector-icons/FontAwesome6"
+import { Image, Pressable, SafeAreaView, ScrollView, Text, View } from "react-native";
+import Icon from "@expo/vector-icons/FontAwesome6";
+import { useState } from "react";
+import { Input } from "../components/login/input";
+import { ButtonInput } from "../components/login/button";
+import { router } from "expo-router";
 
 export default function ForgotPassword() {
-    return(
+
+    const [email, setEmail] = useState('')
+    
+    const handleBackButton = ()=> {
+        router.navigate('/')
+    }
+
+    return (
         <ScrollView>
-            <SafeAreaView className="w-full p-12">
+            <SafeAreaView className="w-full py-12 px-8">
                 <View className="flex-row items-center gap-4">
-                    <Icon name="arrow-left" size={22} color={'#024554'}/>
-                    <Text className="text-2xl text-secondary font-semibold">Esqueci a senha</Text>
+                    <Pressable onPress={handleBackButton}>
+                        <Icon name="arrow-left" size={22} color={"#024554"} />
+                    </Pressable>
+                    <Text className="text-2xl text-secondary font-semibold">
+                        Esqueci a senha
+                    </Text>
                 </View>
-                <View className="w-full px-10">
-                    <Image className="w-full" source={require('../assets/forgot-password-img.png')} resizeMode="contain"/>
+                <View className="w-full h-full justify-center items-center">
+                    <Image
+                        className="h-96 w-80"
+                        source={require("../assets/forgot-password-img.png")}
+                        resizeMode="contain"
+                    />
+                    <Text className="text-3xl font-semibold text-center text-secondary">
+                        Esqueceu a senha?
+                    </Text>
+                    <Text className="text-lg font-semibold text-center text-secondary mt-6 mb-10">
+                        Confirme seu e-mail para receber o código de confirmação
+                    </Text>
+                    <Input
+                        label="Endereço de email"
+                        placeholder="Endereço de email"
+                        value={email}
+                        setValue={e=> setEmail(e)}
+                        />
+                    <ButtonInput route="/" label="Confirmar Email"/>
                 </View>
             </SafeAreaView>
         </ScrollView>
-    )
+    );
 }

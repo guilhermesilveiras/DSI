@@ -7,6 +7,7 @@ export default function Layout() {
             <Stack.Screen name="index"/>
             <Stack.Screen name="cadastro"/>
             <Stack.Screen name="forgot-password"/>
+            <Stack.Screen name='home'/>
         </Stack>
     )
 }

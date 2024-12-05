@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Image, Pressable, SafeAreaViewBase, ScrollView, Text, TextInput, View } from "react-native";
+import { Image, Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Input } from "../components/login/input";
 import { ButtonInput } from "../components/login/button";
@@ -41,7 +41,7 @@ export default function Index() {
                     showPassword={{showPassord: showPassword, setShowPassord: setShowPassword }}
                     setValue={e=> setPassword(e)}
                     />
-                <ButtonInput label="Login"/>
+                <ButtonInput route="/home" label="Login"/>
                 <View className="mt-10 gap-y-4">
                     <LoginNav label="Você tem uma conta?" linkLabel="Cadastre-se" nav={handleSignUp}/>
                     <Pressable onPress={handleForgotPassword}>

@@ -57,7 +57,7 @@ export default function Index() {
                     showPassword={{showPassord: showPasswordConfirmation, setShowPassord: setshowPasswordConfirmation }}
                     setValue={e=> setpasswordConfirmation(e)}
                     />
-                <ButtonInput label="Cadastre-se"/>
+                <ButtonInput route="/" label="Cadastre-se"/>
                 <View className="mt-10 gap-y-4">
                     <LoginNav label="Você tem uma conta?" linkLabel="Volte para o login" nav={handleSignIn}/>
                 </View>
