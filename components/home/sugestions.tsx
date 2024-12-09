@@ -1,27 +1,14 @@
 import { FlatList } from "react-native"
-import { BigCardType } from "../../types/bigCardType"
 import { BigCard } from "./bigCard"
+import { data } from "../../data/temp"
 
 export const Sugestions = ()=> {
     
-    const data:BigCardType[] = [
-        {
-            id: '1',
-            city: 'Roma',
-            country: 'Itália',
-            img: 'https://blog.assistentedeviagem.com.br/wp-content/uploads/2018/12/pontos-turisticos-em-roma-5.jpg'
-        },
-        {
-            id: '2',
-            city: 'Rio de Janeiro',
-            country: 'Brazil',
-            img: 'https://blog.paineirascorcovado.com.br/wp-content/uploads/2024/11/Cristo-Redentor-Por-do-sol-scaled.jpg'
-        },
-    ]
+    const dataTemp = data.filter((item)=> parseInt(item.id) < 3)
     
     return(
         <FlatList
-            data={data}
+            data={dataTemp}
             renderItem={({item})=> <BigCard id={item.id} city={item.city} country={item.country} img={item.img}/>}
             keyExtractor={(item)=> item.id}
             horizontal={true}

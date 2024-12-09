@@ -1,15 +1,23 @@
-import { ImageBackground, Text, View } from "react-native"
+import { ImageBackground, Pressable, Text, View } from "react-native"
 import { LinearGradient } from "expo-linear-gradient"
-import { SmallCardType } from "../../types/smallCardType"
+import { router } from "expo-router"
+import { CardType } from "../../types/card"
 
 
 
-export const SmallCard = ({city, img}: SmallCardType)=> {
+export const SmallCard = ({id, city, img}: CardType)=> {
 
     const imageUrl = img
+
+    const handlePress = ()=> {
+        router.navigate(`details/${id}`)
+    }
     
     return(
-        <View className="w-[47%] h-44 rounded-3xl overflow-hidden">
+        <Pressable 
+            className="w-full sm:w-44 h-44 rounded-3xl overflow-hidden"
+            onPress={handlePress}
+        >
             <ImageBackground source={{uri: imageUrl}} className="w-full h-full">
                 <LinearGradient
                     colors={['#0000', '#000a']}
@@ -22,6 +30,6 @@ export const SmallCard = ({city, img}: SmallCardType)=> {
                     </View>
                 </LinearGradient>
             </ImageBackground>
-        </View>
+        </Pressable>
     )
 }
