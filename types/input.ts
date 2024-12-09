@@ -5,7 +5,7 @@ export type InputType = {
     hide?: boolean,
     showPassword?: {
         showPassord: boolean,
-        setShowPassord: (b: boolean)=> void
+        setShowPassord: (b: boolean) => void
     },
-    setValue: (s: string)=> void
-}
+    setValue: (s: string) => void
+} 
