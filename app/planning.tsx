@@ -1,20 +1,16 @@
 import { SafeAreaView, ScrollView, Text } from "react-native";
 import { Welcome } from "../components/home/welcome";
 import { NavBar } from "../components/home/navBar";
-import { Search } from "../components/home/search";
-import { Sugestions } from "../components/home/sugestions";
-import { MostVisited } from "../components/home/mostVisited";
+import { Title } from "../components/root/title";
+import { TravelList } from "../components/planning/travelList";
 
-export default function Home() {
-
+export default function Planning() {
     return(
         <ScrollView>
             <SafeAreaView className="pb-10">
                     <Welcome name="fulano"/>
-                    <NavBar page="home"/>
-                    <Search/>
-                    <Sugestions/>
-                    <MostVisited/>
+                    <NavBar page="planning"/>
+                    <TravelList/>
             </SafeAreaView>
         </ScrollView>
     )
