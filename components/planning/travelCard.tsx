@@ -1,10 +1,10 @@
-import { Text, View } from "react-native"
+import { View } from "react-native"
 import { Description } from "./description"
 import { CardHeader } from "./cardHeader"
 
 export const TravelCard = ()=> {
     return(
-        <View className="bg-zinc-200 rounded-2xl p-4">
+        <View className="bg-zinc-200 rounded-2xl p-4 border border-tertiary">
             <CardHeader city="Roma" name="Gabriela Kellyane" price="3.278"/>
 
             <View className="justify-end items-end mt-5">

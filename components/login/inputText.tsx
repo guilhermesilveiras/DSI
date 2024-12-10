@@ -3,7 +3,7 @@ import { InputType } from "../../types/input"
 import Icon from "@expo/vector-icons/FontAwesome6"
 
 
-export const Input = (props: InputType)=> {
+export const InputText = (props: InputType)=> {
 
     const handleShowPassword = ()=> {
         props.showPassword?.setShowPassord(!props.showPassword.showPassord)

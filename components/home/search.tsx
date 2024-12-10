@@ -15,7 +15,7 @@ export const Search = ()=> {
             <Text className="font-bold mb-2"></Text>
             <View className="flex-row items-center w-full">
                 <TextInput
-                    className="border w-full border-zinc-300 rounded-full px-8 focus:border-secondary"
+                    className="border w-full bg-zinc-200 border-zinc-300 rounded-full px-8 focus:border-secondary"
                     placeholder='Para onde você quer viajar?'
                     value={location}
                     onChangeText={e=> setLocation(e)}

@@ -1,5 +1,5 @@
 import { View } from "react-native"
-import { Title } from "../root/title"
+import { Title } from "../main/title"
 import { TravelCard } from "./travelCard"
 
 export const TravelList = ()=> {

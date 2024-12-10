@@ -37,4 +37,16 @@ export const data:CardType[] = [
         country: 'Singapura',
         img: 'https://a.travel-assets.com/findyours-php/viewfinder/images/res70/542000/542607-singapore.jpg'
     },
+    {
+        id: '7',
+        city: 'Paris',
+        country: 'França',
+        img: 'https://oficinadeinverno.com.br/cdn/shop/articles/eiffel-tower-sunrise1.jpg?v=1659494576'
+    },
+    {
+        id: '8',
+        city: 'Londres',
+        country: 'Inglaterra',
+        img: 'https://thumbs.dreamstime.com/b/big-ben-london-clock-tower-uk-thames-river-85419623.jpg'
+    },
 ]
