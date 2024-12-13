@@ -15,7 +15,7 @@ export const HeaderDetail = ({img, city, handleBack}: Props)=> {
                 colors={['#0007', '#0000']}
                 className="w-full h-full"
             >
-                <View className="w-full flex-row items-center justify-between py-4 px-8">
+            <View className="w-full flex-row items-center justify-between py-4 px-8">
                 <Pressable onPress={handleBack}>
                     <Icon name="arrow-left-long" size={20} color={"white"} />
                 </Pressable>

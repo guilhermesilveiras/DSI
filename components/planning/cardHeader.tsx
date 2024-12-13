@@ -10,7 +10,7 @@ export const CardHeader = ({city,name,price}: Props)=> {
         <View className="flex-row items-center justify-between">
             <View>
                 <Text className="text-lg font-semibold">
-                    Viegem para {city}
+                    Viagem para {city}
                 </Text>
                 <View className="flex-row gap-2">
                     <Text className="text-zinc-500 text-sm">por</Text>

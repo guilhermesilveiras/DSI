@@ -5,8 +5,8 @@ type Props = {
 }
 export const Welcome = ({name}: Props)=> {
     return(
-        <View className="w-full p-10">
-            <Text className="text-5xl">
+        <View className="w-full px-10 pb-10">
+            <Text className="text-4xl text-tertiary">
                 Olá, {name}!
             </Text>
             <Text className="text-md text-zinc-500 mt-2">

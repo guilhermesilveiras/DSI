@@ -12,7 +12,7 @@ export const Button = ({city, handleAction}: Props)=> {
             className="w-full py-6 mt-16 bg-secondary rounded-full"
         >
             <Text className="text-xl text-center text-white">
-                Planejar Viajem para {city}
+                Planejar Viagem para {city}
             </Text>
         </Pressable>
     )
