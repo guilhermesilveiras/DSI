@@ -4,15 +4,11 @@ import { ButtonInputType } from "../../types/button-input"
 import { router } from "expo-router"
 
 
-export const ButtonInput = ({label, route}: ButtonInputType)=> {
-
-    const handlePress = ()=> {
-        router.replace(route)
-    }
+export const ButtonInput = ({label, onPress}: ButtonInputType)=> {
 
     return(
         <Pressable
-            onPress={handlePress}
+            onPress={onPress}
             className="w-52 rounded-xl overflow-hidden"
         >
             <LinearGradient 
