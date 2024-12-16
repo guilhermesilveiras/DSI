@@ -5,6 +5,9 @@ import { InputText } from "../components/login/inputText";
 import { ButtonInput } from "../components/login/button";
 import { router } from "expo-router";
 import { LoginNav } from "../components/login/login-nav";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../services/firebase";
+import { Try } from "expo-router/build/views/Try";
 
 export default function Login() {
 
@@ -18,6 +21,17 @@ export default function Login() {
     const handleForgotPassword = ()=> {
         router.navigate('/forgot-password')
     }
+
+    const handleEmailSignIn = async () => {
+        try{
+            await signInWithEmailAndPassword(auth, email, password);
+            console.log("Login Sucessido");
+            router.replace("/home");
+            } catch (error) {
+                console.log("Erro ao logar:", error);
+        }
+    };
+
     return(
         <ScrollView>
             <SafeAreaView className="w-full items-center p-12 bg-background">
@@ -41,7 +55,7 @@ export default function Login() {
                     showPassword={{showPassord: showPassword, setShowPassord: setShowPassword }}
                     setValue={e=> setPassword(e)}
                     />
-                <ButtonInput route="/home" label="Login"/>
+                <ButtonInput label="Login" onPress={handleEmailSignIn}/>
                 <View className="mt-10 gap-y-4">
                     <LoginNav label="Você tem uma conta?" linkLabel="Cadastre-se" nav={handleSignUp}/>
                     <Pressable onPress={handleForgotPassword}>
