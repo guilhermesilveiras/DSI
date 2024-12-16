@@ -1,7 +1,7 @@
 import { Image, Pressable, SafeAreaView, ScrollView, Text, View } from "react-native";
 import Icon from "@expo/vector-icons/FontAwesome6";
 import { useState } from "react";
-import { Input } from "../components/login/input";
+import { InputText } from "../components/login/inputText";
 import { ButtonInput } from "../components/login/button";
 import { router } from "expo-router";
 
@@ -15,7 +15,7 @@ export default function ForgotPassword() {
 
     return (
         <ScrollView>
-            <SafeAreaView className="w-full py-12 px-8">
+            <SafeAreaView className="w-full py-12 px-8 bg-background">
                 <View className="flex-row items-center gap-4">
                     <Pressable onPress={handleBackButton}>
                         <Icon name="arrow-left" size={22} color={"#024554"} />
@@ -36,7 +36,7 @@ export default function ForgotPassword() {
                     <Text className="text-lg font-semibold text-center text-secondary mt-6 mb-10">
                         Confirme seu e-mail para receber o código de confirmação
                     </Text>
-                    <Input
+                    <InputText
                         label="Endereço de email"
                         placeholder="Endereço de email"
                         value={email}

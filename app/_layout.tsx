@@ -1,6 +1,5 @@
 import { Stack } from "expo-router";
 import '../global.css'
-import { ScreenStack } from "react-native-screens";
 
 export default function Layout() {
     return(
@@ -10,6 +9,9 @@ export default function Layout() {
             <Stack.Screen name="cadastro"/>
             <Stack.Screen name="forgot-password"/>
             <Stack.Screen name='home'/>
+            <Stack.Screen name="for-you"/>
+            <Stack.Screen name="planning"/>
+            <Stack.Screen name="wish-list"/>
         </Stack>
     )
 }

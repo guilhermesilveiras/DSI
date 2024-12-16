@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Image, Pressable, SafeAreaViewBase, ScrollView, Text, TextInput, View } from "react-native";
+import { Image, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Input } from "../components/login/input";
+import { InputText } from "../components/login/inputText";
 import { ButtonInput } from "../components/login/button";
 import { router } from "expo-router";
 import { LoginNav } from "../components/login/login-nav";
@@ -26,7 +26,7 @@ export default function Index() {
 
     return(
         <ScrollView>
-            <SafeAreaView className="w-full items-center p-12">
+            <SafeAreaView className="w-full items-center p-12 bg-background">
 
                 <Image
                     className="m-8 h-52 w-52"
@@ -34,19 +34,19 @@ export default function Index() {
                     resizeMode="contain"
                     />
                 <Text className="text-3xl font-semibold mb-16 text-secondary">Crie sua conta</Text>
-                <Input
+                <InputText
                     label="Nome"
                     placeholder="Nome"
                     value={name}
                     setValue={e=> setName(e)}
                     />
-                <Input
+                <InputText
                     label="Endereço de email"
                     placeholder="Endereço de email"
                     value={email}
                     setValue={e=> setEmail(e)}
                     />
-                <Input
+                <InputText
                     label="Senha"
                     placeholder="Senha"
                     value={password}
@@ -54,7 +54,7 @@ export default function Index() {
                     showPassword={{showPassord: showPassword, setShowPassord: setShowPassword }}
                     setValue={e=> setPassword(e)}
                     />
-                <Input
+                <InputText
                     label="Confirme a Senha"
                     placeholder="Senha"
                     value={passwordConfirmation}

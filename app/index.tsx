@@ -1,14 +1,13 @@
-import { useNavigation, NavigationProp } from "@react-navigation/native";
 import React, {useEffect} from "react"
 import { View, Image, StatusBar } from "react-native"
-import { router, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 
 const PreLogin = () =>{
     const router = useRouter();
     useEffect(() => {
         const timer = setTimeout(() => {
             router.replace("/login");
-        }, 5000);
+        }, 2500);
         return () => clearTimeout(timer);
         }, []);
 
