@@ -26,9 +26,9 @@ export default function Login() {
         try{
             await signInWithEmailAndPassword(auth, email, password);
             console.log("Login Sucessido");
-            router.navigate("/home");
+            router.replace("/home");
             } catch (error) {
-                console.error("Erro ao logar:", error);
+                console.log("Erro ao logar:", error);
         }
     };
 
@@ -55,7 +55,7 @@ export default function Login() {
                     showPassword={{showPassord: showPassword, setShowPassord: setShowPassword }}
                     setValue={e=> setPassword(e)}
                     />
-                <ButtonInput route="/" label="Login" onPress={handleEmailSignIn}/>
+                <ButtonInput label="Login" onPress={handleEmailSignIn}/>
                 <View className="mt-10 gap-y-4">
                     <LoginNav label="Você tem uma conta?" linkLabel="Cadastre-se" nav={handleSignUp}/>
                     <Pressable onPress={handleForgotPassword}>

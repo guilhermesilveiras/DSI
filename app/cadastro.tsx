@@ -15,9 +15,14 @@ export default function Index() {
     const [showPassword, setShowPassword] = useState(false)
     const [showPasswordConfirmation, setshowPasswordConfirmation] = useState(false)
 
-    const handleSignIn = ()=> {
-        router.navigate('/')
+    const handleSignup = ()=> {
+        
     }
+
+    const handleSignIn = () =>{
+        router.navigate("/login")
+    }
+
 
     return(
         <ScrollView>
@@ -57,7 +62,7 @@ export default function Index() {
                     showPassword={{showPassord: showPasswordConfirmation, setShowPassord: setshowPasswordConfirmation }}
                     setValue={e=> setpasswordConfirmation(e)}
                     />
-                <ButtonInput route="/" label="Cadastre-se"/>
+                <ButtonInput label="Cadastre-se" onPress={handleSignup}/>
                 <View className="mt-10 gap-y-4">
                     <LoginNav label="Você tem uma conta?" linkLabel="Volte para o login" nav={handleSignIn}/>
                 </View>
