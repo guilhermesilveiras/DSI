@@ -10,7 +10,11 @@ export default function ForgotPassword() {
     const [email, setEmail] = useState('')
     
     const handleBackButton = ()=> {
-        router.navigate('/')
+        router.navigate('/login')
+    }
+
+    const handlePress = ()=> {
+        
     }
 
     return (
@@ -42,7 +46,7 @@ export default function ForgotPassword() {
                         value={email}
                         setValue={e=> setEmail(e)}
                         />
-                    <ButtonInput route="/" label="Confirmar Email"/>
+                    <ButtonInput onPress={handlePress} label="Confirmar Email"/>
                 </View>
             </SafeAreaView>
         </ScrollView>

@@ -8,12 +8,14 @@ import { LoginNav } from "../components/login/login-nav";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../services/firebase";
 import { Try } from "expo-router/build/views/Try";
+import { FirebaseError } from "firebase/app";
 
 export default function Login() {
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [showPassword, setShowPassword] = useState(false)
+    const [errorMessage, setErrorMessage] = useState('')
 
     const handleSignUp = ()=> {
         router.navigate('/cadastro')
@@ -28,8 +30,13 @@ export default function Login() {
             console.log("Login Sucessido");
             router.replace("/home");
             } catch (error) {
-                console.log("Erro ao logar:", error);
-        }
+                if (error instanceof FirebaseError) {
+                    setErrorMessage(error.code.toString().split('/')[1])
+                    console.log(errorMessage)
+                }else {
+                    console.log("Erro desconhecido:", error);
+                }
+            }
     };
 
     return(
@@ -46,6 +53,7 @@ export default function Login() {
                     placeholder="Endereço de email"
                     value={email}
                     setValue={e=> setEmail(e)}
+                    error={errorMessage}
                     />
                 <InputText
                     label="Senha"
@@ -54,6 +62,7 @@ export default function Login() {
                     hide={true}
                     showPassword={{showPassord: showPassword, setShowPassord: setShowPassword }}
                     setValue={e=> setPassword(e)}
+                    error={errorMessage}
                     />
                 <ButtonInput label="Login" onPress={handleEmailSignIn}/>
                 <View className="mt-10 gap-y-4">

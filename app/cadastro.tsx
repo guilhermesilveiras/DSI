@@ -5,6 +5,9 @@ import { InputText } from "../components/login/inputText";
 import { ButtonInput } from "../components/login/button";
 import { router } from "expo-router";
 import { LoginNav } from "../components/login/login-nav";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../services/firebase";
+import { FirebaseError } from "firebase/app";
 
 export default function Index() {
 
@@ -12,12 +15,34 @@ export default function Index() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [passwordConfirmation, setpasswordConfirmation] = useState('')
+
     const [showPassword, setShowPassword] = useState(false)
     const [showPasswordConfirmation, setshowPasswordConfirmation] = useState(false)
 
-    const handleSignup = ()=> {
-        
-    }
+    const [errorMessage, setErrorMessage] = useState('')
+
+
+    const handleCreateUser = async () => {
+        try {
+            if (password.split("").length > 5 && password === passwordConfirmation){
+                console.log(password, passwordConfirmation, password.split("").length);
+                await createUserWithEmailAndPassword(auth, email, password);
+                console.log("Cadastro bem-sucedido");
+                router.replace("/home");
+            }
+            else {
+                setErrorMessage('password-unmatch')
+                return
+            }
+        } catch (error) {
+            if (error instanceof FirebaseError) {
+                setErrorMessage(error.code.toString().split('/')[1])
+            }else {
+                console.log("Erro desconhecido:", error);
+            }
+        }
+    };
+
 
     const handleSignIn = () =>{
         router.navigate("/login")
@@ -45,6 +70,7 @@ export default function Index() {
                     placeholder="Endereço de email"
                     value={email}
                     setValue={e=> setEmail(e)}
+                    error={errorMessage}
                     />
                 <InputText
                     label="Senha"
@@ -53,6 +79,7 @@ export default function Index() {
                     hide={true}
                     showPassword={{showPassord: showPassword, setShowPassord: setShowPassword }}
                     setValue={e=> setPassword(e)}
+                    error={errorMessage}
                     />
                 <InputText
                     label="Confirme a Senha"
@@ -61,8 +88,9 @@ export default function Index() {
                     hide={true}
                     showPassword={{showPassord: showPasswordConfirmation, setShowPassord: setshowPasswordConfirmation }}
                     setValue={e=> setpasswordConfirmation(e)}
+                    error={errorMessage == "password-unmatch" ? "password-unmatch": ''}
                     />
-                <ButtonInput label="Cadastre-se" onPress={handleSignup}/>
+                <ButtonInput label="Cadastre-se" onPress={handleCreateUser}/>
                 <View className="mt-10 gap-y-4">
                     <LoginNav label="Você tem uma conta?" linkLabel="Volte para o login" nav={handleSignIn}/>
                 </View>

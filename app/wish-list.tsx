@@ -1,10 +1,12 @@
 import { FlatList, Pressable, SafeAreaView, Text, TextInput, View } from "react-native";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import { Platform } from "react-native";
 import { wishListType } from "../types/wish-list";
 import { ListCard } from "../components/wish-list/card";
 import { Header } from "../components/wish-list/header";
+import Animated, { SlideInLeft, SlideOutRight } from "react-native-reanimated";
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Import AsyncStorage
 
 export default function WishList() {
   const [wish, setWish] = useState<string>("");
@@ -14,32 +16,57 @@ export default function WishList() {
   const [id, setId] = useState<number>(0);
   const [editingId, setEditingId] = useState<string | null>(null);
 
+  // Carregar a lista do AsyncStorage quando o componente for montado
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const storedList = await AsyncStorage.getItem("wishList");
+        if (storedList) {
+          setList(JSON.parse(storedList));
+        }
+      } catch (error) {
+        console.error("Erro ao carregar a lista", error);
+      }
+    };
+
+    loadData();
+  }, []);
+
+  // Função para salvar a lista no AsyncStorage
+  const saveListToStorage = async (updatedList: wishListType[]) => {
+    try {
+      await AsyncStorage.setItem("wishList", JSON.stringify(updatedList));
+    } catch (error) {
+      console.error("Erro ao salvar a lista", error);
+    }
+  };
+
   const toggleDatePicker = () => {
     setOpen(!open);
   };
 
   const handlePress = () => {
     if (date !== null && wish !== "") {
+      const newItem = {
+        id: id.toString(),
+        wish,
+        date: date.toISOString(),
+      };
+
       if (editingId !== null) {
         setList((prevList) =>
           prevList.map((item) =>
-            item.id === editingId
-              ? { ...item, wish, date: date.toISOString() }
-              : item
+            item.id === editingId ? { ...item, wish, date: date.toISOString() } : item
           )
         );
         setEditingId(null);
       } else {
-        setList([
-          ...list,
-          {
-            id: id.toString(),
-            wish,
-            date: date.toISOString(),
-          },
-        ]);
+        const updatedList = [...list, newItem];
+        setList(updatedList);
+        saveListToStorage(updatedList); // Salvar a lista após adicionar o item
         setId(id + 1);
       }
+
       setWish("");
       setDate(null);
     }
@@ -55,9 +82,9 @@ export default function WishList() {
 
   const handleDelete = (key: string) => {
     if (parseInt(key) > -1) {
-      const listClone = [...list];
-      const newList = listClone.filter((item) => item.id != key);
+      const newList = list.filter((item) => item.id !== key);
       setList(newList);
+      saveListToStorage(newList); // Salvar a lista após excluir um item
     }
   };
 
@@ -104,15 +131,15 @@ export default function WishList() {
         {open && (
           <DateTimePicker
             mode="date"
-            display={Platform.OS === "ios" ? "inline" : "default"}
             value={date || new Date()}
             onChange={onChange}
+            display="spinner"
           />
         )}
 
         {list.length > 0 && (
           <View className="w-full mt-6">
-            <FlatList
+            <Animated.FlatList
               data={list}
               renderItem={({ item }) => (
                 <ListCard
@@ -123,7 +150,9 @@ export default function WishList() {
                   handleEdit={handleEdit}
                 />
               )}
-              keyExtractor={(item) => item.id}
+              keyExtractor={(item) => item.id.toString()}
+              entering={SlideInLeft}
+              exiting={SlideOutRight}
               showsVerticalScrollIndicator={false}
             />
           </View>

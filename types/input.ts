@@ -2,6 +2,7 @@ export type InputType = {
     label: string,
     placeholder: string,
     value: string,
+    error?: string,
     hide?: boolean,
     showPassword?: {
         showPassord: boolean,

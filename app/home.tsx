@@ -4,7 +4,6 @@ import { NavBar } from "../components/main/navBar";
 import { Search } from "../components/home/search";
 import { Sugestions } from "../components/home/suggestions";
 import { MostVisited } from "../components/home/mostVisited";
-import Icon from "@expo/vector-icons/FontAwesome6";
 import { Header } from "../components/main/header";
 
 export default function Home() {
@@ -13,7 +12,7 @@ export default function Home() {
         <ScrollView>
             <SafeAreaView className="pb-10 bg-background">
                 <Header/>
-                <Welcome name="fulano"/>
+                <Welcome name=""/>
                 <NavBar page="home"/>
                 <Search/>
                 <Sugestions/>

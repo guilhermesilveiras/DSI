@@ -13,6 +13,7 @@ export const Sugestions = ()=> {
             keyExtractor={(item)=> item.id}
             horizontal={true}
             className="ml-8 pb-2"
+            showsHorizontalScrollIndicator={false}
         />
     )
 }
