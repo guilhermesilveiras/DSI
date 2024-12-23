@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import Animated, {
   SlideInLeft,
@@ -6,8 +5,12 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withTiming,
+  runOnJS,
+  useAnimatedGestureHandler,
 } from "react-native-reanimated";
+import { PanGestureHandler } from "react-native-gesture-handler";
 import { wishListType } from "../../types/wish-list";
+import Icon from "@expo/vector-icons/Feather";
 
 type Props = {
   id: string;
@@ -18,60 +21,62 @@ type Props = {
 };
 
 export const ListCard = ({ id, city, date, handleDelete, handleEdit }: Props) => {
-  const [open, setOpen] = useState(false);
-  const configHeight = useSharedValue(0);
+  const translateX = useSharedValue(0);
+  const cardOpacity = useSharedValue(1);
 
-  const configStyle = useAnimatedStyle(() => ({
-    height: withTiming(configHeight.value, { duration: 100 }),
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: translateX.value }],
+    opacity: cardOpacity.value,
   }));
 
-  const handlePress = () => {
-    configHeight.value = open ? 0 : 40;
-    setOpen(!open);
-  };
+  const gestureHandler = useAnimatedGestureHandler({
+    onActive: (event) => {
+      translateX.value = event.translationX;
+    },
+    onEnd: () => {
+      if (translateX.value > 150) {
+        // Excluir o item se for arrastado o suficiente
+        translateX.value = withTiming(300, { duration: 200 }, () => {
+          cardOpacity.value = withTiming(0, { duration: 200 });
+        });
+        runOnJS(handleDelete)(id); // Chamar a função de exclusão
+      } else {
+        // Retornar à posição inicial
+        translateX.value = withTiming(0, { duration: 200 });
+      }
+    },
+  });
 
   return (
-    <Animated.View
-      entering={SlideInLeft}
-      exiting={SlideOutRight}
-      style={{ marginBottom: 12 }} // Adicionando algum espaçamento
-      className="bg-zinc-200 rounded-2xl p-4 border border-tertiary"
-    >
-      <Pressable onPress={handlePress}>
-        <View className="flex-row items-center">
-          <View className="flex-1">
-            <Text className="text-xl font-semibold text-secondary">{city}</Text>
-            <Text className="text-sm text-zinc-500">{date}</Text>
+    <PanGestureHandler onGestureEvent={gestureHandler}>
+      <Animated.View
+        style={animatedStyle}
+        entering={SlideInLeft}
+        exiting={SlideOutRight}
+        className="w-60 h-60 rounded-3xl bg-secondary m-auto justify-center items-center mb-2"
+      >
+        <View className="gap-4">
+          <View>
+            <Text className="text-4xl font-semibold text-white text-center">{city}</Text>
+            <Text className="text-sm text-white text-center">{date}</Text>
           </View>
-          <Pressable className="bg-secondary rounded-xl py-2 px-4">
-            <Text className="text-center text-white">
+          <Pressable className="bg-white rounded-xl py-2 px-6">
+            <Text className="text-center text-tertiary font-semibold">
               Planejar
             </Text>
           </Pressable>
         </View>
-
-        <Animated.View
-          style={configStyle}
-          className="flex-row items-center justify-center"
-          >
+        <View className="flex-row items-center justify-end mt-4">
           <Pressable
             accessible={true}
             accessibilityLabel="Editar"
             onPress={() => handleEdit({ id, wish: city, date })}
-            className="text-md items-center justify-center flex-1"
-            >
-            <Text>Editar</Text>
-          </Pressable>
-          <Pressable
-            accessible={true}
-            accessibilityLabel="Excluir"
-            onPress={() => handleDelete(id)}
-            className="text-md items-center justify-center flex-1"
+            className="rounded-xl relative p-4 -mt-80 ml-44"
           >
-            <Text>Excluir</Text>
+            <Icon name="edit" color={"white"} size={20} />
           </Pressable>
-        </Animated.View>
-      </Pressable>
-    </Animated.View>
+        </View>
+      </Animated.View>
+    </PanGestureHandler>
   );
 };
