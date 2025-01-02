@@ -6,8 +6,7 @@ import { ButtonInput } from "../components/login/button";
 import { router } from "expo-router";
 import { LoginNav } from "../components/login/login-nav";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../services/firebase";
-import { Try } from "expo-router/build/views/Try";
+import { auth } from "../firebaseConfig"; // Importe auth de firebaseConfig
 import { FirebaseError } from "firebase/app";
 
 export default function Login() {

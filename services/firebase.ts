@@ -1,7 +1,9 @@
-import { initializeApp } from "firebase/app";
+/*import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore"; // Importando o Firestore
 
+// Configuração do Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyDe4GjTCqlQI4S_0-Z0TOL3B6HlASFNdS4",
   authDomain: "atlas-22895.firebaseapp.com",
@@ -13,6 +15,11 @@ const firebaseConfig = {
   measurementId: "G-FEP7GWT5FN"
 };
 
+// Inicializando o Firebase
 const app = initializeApp(firebaseConfig);
+
+// Inicializando o Firestore e Analytics
 const analytics = getAnalytics(app);
-export const auth = getAuth(app);
+export const auth = getAuth(app); // Exportando o serviço de autenticação
+export const db = getFirestore(app); // Exportando o serviço Firestore
+*/

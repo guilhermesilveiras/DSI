@@ -45,6 +45,9 @@ export const InputText = (props: InputType)=> {
                         value={props.value}
                         onChangeText={props.setValue}
                         />
+                        {props.error && props.error == 'name-required' && props.label === 'Nome' &&
+                            <ErrorText text="Nome é obriatório"/>
+                        }
                         {props.error && props.error == 'invalid-email' &&
                             <ErrorText text="Email inválido"/>
                         }
