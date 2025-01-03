@@ -1,7 +1,7 @@
 import { Pressable, Text, TextInput, View } from "react-native"
 import { InputType } from "../../types/input"
 import Icon from "@expo/vector-icons/FontAwesome6"
-import { ErrorText } from "./errorText"
+import { ErrorText } from "./error-text"
 
 
 export const InputText = (props: InputType)=> {

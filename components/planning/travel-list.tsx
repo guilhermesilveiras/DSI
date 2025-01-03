@@ -1,6 +1,6 @@
 import { View } from "react-native"
 import { Title } from "../main/title"
-import { TravelCard } from "./travelCard"
+import { TravelCard } from "./travel-card"
 
 export const TravelList = ()=> {
     return(

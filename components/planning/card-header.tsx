@@ -13,11 +13,17 @@ export const CardHeader = ({city,name,price}: Props)=> {
                     Viagem para {city}
                 </Text>
                 <View className="flex-row gap-2">
-                    <Text className="text-zinc-500 text-sm">por</Text>
-                    <Text className="text-tertiary text-sm">{name}</Text>
+                    <Text className="text-zinc-500 text-sm">
+                        por
+                    </Text>
+                    <Text className="text-tertiary text-sm">
+                        {name}
+                    </Text>
                 </View>
             </View>
-            <Text className="text-2xl text-tertiary font-semibold">U$ {price}</Text>
+            <Text className="text-2xl text-tertiary font-semibold">
+                U$ {price}
+            </Text>
         </View>
     )
 }

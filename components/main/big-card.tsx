@@ -3,8 +3,6 @@ import { LinearGradient } from "expo-linear-gradient"
 import { CardType } from "../../types/card"
 import { router } from "expo-router"
 
-
-
 export const BigCard = ({id, city, country, img}: CardType)=> {
 
     const imageUrl = img

@@ -20,11 +20,10 @@ export const SearchPrice = ()=> {
                 placeholder="Orçamento em USD"
                 value={`U$ ${price}`}
                 onChangeText={(text) => {
-                    // Filtra apenas números
                     const numericValue = text.replace(/[^0-9]/g, '');
                     setPrice(numericValue);
                 }}
-                keyboardType="numeric" // Garante que o teclado numérico será exibido
+                keyboardType="numeric"
             />
 
                     <Pressable 

@@ -1,6 +1,6 @@
 import { View } from "react-native"
 import { Description } from "./description"
-import { CardHeader } from "./cardHeader"
+import { CardHeader } from "./card-header"
 
 export const TravelCard = ()=> {
     return(

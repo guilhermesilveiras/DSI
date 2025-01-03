@@ -9,8 +9,6 @@ import { Widget } from "../../components/details/widget";
 import { Prices } from "../../components/details/prices";
 import { Button } from "../../components/details/button";
 
-
-
 export default function Details() {
 
     const { path } = useLocalSearchParams()

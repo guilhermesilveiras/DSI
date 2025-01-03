@@ -1,5 +1,5 @@
 import { FlatList } from "react-native"
-import { BigCard } from "../main/bigCard"
+import { BigCard } from "../main/big-card"
 import { data } from "../../data/temp"
 
 export const Sugestions = ()=> {
