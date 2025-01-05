@@ -1,13 +1,18 @@
-import { Text } from "react-native"
+import React, { Component } from "react";
+import { Text } from "react-native";
 
 type Props = {
-    text: string
-}
+    text: string;
+};
 
-export const ErrorText = ({text}: Props)=> {
-    return(
-        <Text className="ml-4 absolute -bottom-6 text-red-500">
-            {text}
-        </Text>
-    )
+export class ErrorText extends Component<Props> {
+    render() {
+        const { text } = this.props;
+
+        return (
+            <Text className="ml-4 absolute -bottom-6 text-red-500">
+                {text}
+            </Text>
+        );
+    }
 }

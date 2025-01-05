@@ -1,35 +1,31 @@
-import React from "react"
-import { View } from "react-native"
-import { NavButton } from "./nav-button"
+import React, { Component } from "react";
+import { View } from "react-native";
+import { NavButton } from "./nav-button";
 
 type Props = {
-    page: string
-}
+    page: string;
+};
 
-export const NavBar = ({page}: Props)=> {
-    return(
-        <>
-            {page === 'home' &&
-                <View className="flex-row flex-wrap justify-between items-center gap-4 px-10">
-                    <NavButton label="Home" active={true} route="/home"/>
-                    <NavButton label="Para você" route="/for-you"/>
-                    <NavButton label="planejamento" route="/planning"/>
-                </View>
-            }
-            {page === 'for-you' &&
-                <View className="flex-row flex-wrap justify-between items-center gap-4 px-10">
-                    <NavButton label="Home" route="/home"/>
-                    <NavButton label="Para você" active={true} route="/for-you"/>
-                    <NavButton label="planejamento" route="planning"/>
-                </View>
-            }
-            {page === 'planning' &&
-                <View className="flex-row flex-wrap justify-between items-center gap-4 px-10">
-                    <NavButton label="Home" route="/home"/>
-                    <NavButton label="Para você" route="/for-you"/>
-                    <NavButton label="planejamento" active={true} route="/planning"/>
-                </View>
-            }
-        </>
-    )
+export class NavBar extends Component<Props> {
+    renderNavButtons = (activePage: string) => {
+        return (
+            <View className="flex-row flex-wrap justify-between items-center gap-4 px-10">
+                <NavButton label="Home" active={activePage === "home"} route="/home" />
+                <NavButton label="Para você" active={activePage === "for-you"} route="/for-you" />
+                <NavButton label="planejamento" active={activePage === "planning"} route="/planning" />
+            </View>
+        );
+    };
+
+    render() {
+        const { page } = this.props;
+
+        return (
+            <>
+                {page === 'home' && this.renderNavButtons('home')}
+                {page === 'for-you' && this.renderNavButtons('for-you')}
+                {page === 'planning' && this.renderNavButtons('planning')}
+            </>
+        );
+    }
 }

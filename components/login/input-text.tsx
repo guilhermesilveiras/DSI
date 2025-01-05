@@ -1,78 +1,84 @@
-import { Pressable, Text, TextInput, View } from "react-native"
-import { InputType } from "../../types/input"
-import Icon from "@expo/vector-icons/FontAwesome6"
-import { ErrorText } from "./error-text"
+import React, { Component } from "react";
+import { Pressable, Text, TextInput, View } from "react-native";
+import { InputType } from "../../types/input";
+import Icon from "@expo/vector-icons/FontAwesome6";
+import { ErrorText } from "./error-text";
 
+export class InputText extends Component<InputType> {
 
-export const InputText = (props: InputType)=> {
+    handleShowPassword = (): void => {
+        const { showPassword } = this.props;
+        if (showPassword) {
+            showPassword.setShowPassord(!showPassword.showPassord);
+        }
+    };
 
-    const handleShowPassword = ()=> {
-        props.showPassword?.setShowPassord(!props.showPassword.showPassord)
-    }
+    render() {
+        const { label, placeholder, value, setValue, hide, showPassword, error } = this.props;
 
-    return(
-        <View className="w-full mb-8 gap-1">
-            <Text className="font-bold mb-2">{props.label}</Text>
-            <View className="flex-row items-center w-full">
-                {props.hide && 
-                <View className="w-full">
-                    <TextInput
-                        className="border border-zinc-300 rounded-xl px-8 focus:border-secondary"
-                        placeholder={props.placeholder}
-                        value={props.value}
-                        onChangeText={props.setValue}
-                        secureTextEntry={!props.showPassword?.showPassord}
-                        />
-                    {props.error && props.error == 'missing-password' &&
-                        <ErrorText text="senha precisa ter no mínimo 6 dígitos"/>
-                    }
-                    {props.error && props.error == 'weak-password' &&
-                        <ErrorText text="senha precisa ter no mínimo 6 dígitos"/>
-                    }
-                    {props.error && props.error == 'password-unmatch' &&
-                        <ErrorText text="confirmação de senha errada"/>
-                    }
-                    {props.error && props.error == 'invalid-credential' &&
-                        <ErrorText text="Email/Senha inválidos"/>
-                    }
+        return (
+            <View className="w-full mb-8 gap-1">
+                <Text className="font-bold mb-2">{label}</Text>
+                <View className="flex-row items-center w-full">
+                    {hide ? (
+                        <View className="w-full">
+                            <TextInput
+                                className="border border-zinc-300 rounded-xl px-8 focus:border-secondary"
+                                placeholder={placeholder}
+                                value={value}
+                                onChangeText={setValue}
+                                secureTextEntry={!showPassword?.showPassord}
+                            />
+                            {error && error === 'missing-password' && (
+                                <ErrorText text="senha precisa ter no mínimo 6 dígitos" />
+                            )}
+                            {error && error === 'weak-password' && (
+                                <ErrorText text="senha precisa ter no mínimo 6 dígitos" />
+                            )}
+                            {error && error === 'password-unmatch' && (
+                                <ErrorText text="confirmação de senha errada" />
+                            )}
+                            {error && error === 'invalid-credential' && (
+                                <ErrorText text="Email/Senha inválidos" />
+                            )}
+                        </View>
+                    ) : (
+                        <View className="w-full">
+                            <TextInput
+                                className="border border-zinc-300 rounded-xl px-8 focus:border-secondary"
+                                placeholder={placeholder}
+                                value={value}
+                                onChangeText={setValue}
+                            />
+                            {error && error === 'name-required' && label === 'Nome' && (
+                                <ErrorText text="Nome é obrigatório" />
+                            )}
+                            {error && error === 'invalid-email' && (
+                                <ErrorText text="Email inválido" />
+                            )}
+                            {error && error === 'missing-email' && (
+                                <ErrorText text="Email inválido" />
+                            )}
+                            {error && error === 'email-already-in-use' && value !== '' && (
+                                <ErrorText text="Email já cadastrado" />
+                            )}
+                            {error && error === 'invalid-credential' && (
+                                <ErrorText text="Email/Senha inválidos" />
+                            )}
+                        </View>
+                    )}
+                    {showPassword && showPassword.showPassord && (
+                        <Pressable className="-ml-10" onPress={this.handleShowPassword}>
+                            <Icon name="eye-slash" size={16} />
+                        </Pressable>
+                    )}
+                    {showPassword && !showPassword.showPassord && (
+                        <Pressable className="-ml-10" onPress={this.handleShowPassword}>
+                            <Icon name="eye" size={16} />
+                        </Pressable>
+                    )}
                 </View>
-                }
-                {!props.hide &&
-                <View className="w-full">
-                    <TextInput
-                        className="border border-zinc-300 rounded-xl px-8 focus:border-secondary"
-                        placeholder={props.placeholder}
-                        value={props.value}
-                        onChangeText={props.setValue}
-                        />
-                        {props.error && props.error == 'name-required' && props.label === 'Nome' &&
-                            <ErrorText text="Nome é obriatório"/>
-                        }
-                        {props.error && props.error == 'invalid-email' &&
-                            <ErrorText text="Email inválido"/>
-                        }
-                        {props.error && props.error == 'missing-email' &&
-                            <ErrorText text="Email inválido"/>
-                        }
-                        {props.error && props.error == 'email-already-in-use' && props.value !== '' &&
-                            <ErrorText text="Email já cadastrado"/>
-                        }
-                        {props.error && props.error == 'invalid-credential' &&
-                            <ErrorText text="Email/Senha inválidos"/>
-                        }
-                </View>
-                }
-                {props.showPassword && props.showPassword.showPassord &&
-                    <Pressable className="-ml-10" onPress={handleShowPassword}>
-                        <Icon name="eye-slash" size={16}/>
-                    </Pressable>
-                }
-                {props.showPassword && !props.showPassword.showPassord &&
-                    <Pressable className="-ml-10" onPress={handleShowPassword}>
-                        <Icon name="eye" size={16}/>
-                    </Pressable>
-                }
             </View>
-        </View>
-    )
+        );
+    }
 }

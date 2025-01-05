@@ -1,13 +1,18 @@
-import { Text } from "react-native"
+import React from "react";
+import { Text } from "react-native";
 
-type Props = {
-    label: string
+interface DescriptionProps {
+    label: string;
 }
 
-export const Description = ({label}: Props)=> {
-    return(
-        <Text className="text text-tertiary text-sm">
-            {label}
-        </Text>
-    )
+export class Description extends React.Component<DescriptionProps> {
+    render() {
+        const { label } = this.props;
+
+        return (
+            <Text className="text text-tertiary text-sm">
+                {label}
+            </Text>
+        );
+    }
 }

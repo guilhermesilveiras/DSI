@@ -1,16 +1,29 @@
-import { View } from "react-native"
-import { Description } from "./description"
-import { CardHeader } from "./card-header"
+import React from "react";
+import { View } from "react-native";
+import { Description } from "./description";
+import { CardHeader } from "./card-header";
 
-export const TravelCard = ()=> {
-    return(
-        <View className="bg-zinc-200 rounded-2xl p-4 border border-tertiary">
-            <CardHeader city="Roma" name="Gabriela Kellyane" price="3.278"/>
+interface TravelCardProps {
+    city: string;
+    name: string;
+    price: string;
+    status: string;
+    dateRange: string;
+}
 
-            <View className="justify-end items-end mt-5">
-                <Description label="Realizada"/>
-                <Description label="1 mai 2024 - 5 mai 2024"/>
+export class TravelCard extends React.Component<TravelCardProps> {
+    render() {
+        const { city, name, price, status, dateRange } = this.props;
+
+        return (
+            <View className="bg-zinc-200 rounded-2xl p-4 border border-tertiary">
+                <CardHeader city={city} name={name} price={price} />
+
+                <View className="justify-end items-end mt-5">
+                    <Description label={status} />
+                    <Description label={dateRange} />
+                </View>
             </View>
-        </View>
-    )
+        );
+    }
 }
