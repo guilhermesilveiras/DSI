@@ -12,6 +12,7 @@ export default function Layout() {
             <Stack.Screen name="for-you"/>
             <Stack.Screen name="planning"/>
             <Stack.Screen name="wish-list"/>
+            <Stack.Screen name="profile"/>
         </Stack>
     )
 }
