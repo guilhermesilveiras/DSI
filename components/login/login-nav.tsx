@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Pressable, Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 
 type Props = {
     label: string;
@@ -14,9 +14,9 @@ export class LoginNav extends Component<Props> {
         return (
             <View className="flex-row items-center gap-2 text-zinc-500">
                 <Text className="text-zinc-500">{label}</Text>
-                <Pressable onPress={nav}>
+                <TouchableOpacity onPress={nav}>
                     <Text className="text-secondary font-bold">{linkLabel}</Text>
-                </Pressable>
+                </TouchableOpacity>
             </View>
         );
     }

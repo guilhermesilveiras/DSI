@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Pressable, Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import Icon from "@expo/vector-icons/FontAwesome6";
 
 interface Props {
@@ -13,9 +13,9 @@ export class Header extends Component<Props> {
 
         return (
             <View className="flex-row items-center justify-between">
-                <Pressable onPress={handleBack}>
+                <TouchableOpacity onPress={handleBack}>
                     <Icon name="arrow-left" size={22} color={"#024554"} />
-                </Pressable>
+                </TouchableOpacity>
                 <Text className="text-2xl text-secondary font-semibold">
                     {label}
                 </Text>

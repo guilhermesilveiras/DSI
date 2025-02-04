@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Pressable, Text, TextInput, View } from "react-native";
+import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { InputType } from "../../types/input";
 import Icon from "@expo/vector-icons/FontAwesome6";
 import { ErrorText } from "./error-text";
@@ -68,14 +68,14 @@ export class InputText extends Component<InputType> {
                         </View>
                     )}
                     {showPassword && showPassword.showPassord && (
-                        <Pressable className="-ml-10" onPress={this.handleShowPassword}>
+                        <TouchableOpacity className="-ml-10" onPress={this.handleShowPassword}>
                             <Icon name="eye-slash" size={16} />
-                        </Pressable>
+                        </TouchableOpacity>
                     )}
                     {showPassword && !showPassword.showPassord && (
-                        <Pressable className="-ml-10" onPress={this.handleShowPassword}>
+                        <TouchableOpacity className="-ml-10" onPress={this.handleShowPassword}>
                             <Icon name="eye" size={16} />
-                        </Pressable>
+                        </TouchableOpacity>
                     )}
                 </View>
             </View>

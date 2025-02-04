@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { router } from "expo-router";
-import { Pressable, Text } from "react-native";
+import { Text, TouchableOpacity } from "react-native";
 
 type Props = {
     label: string;
@@ -20,14 +20,14 @@ export class NavButton extends Component<Props> {
         const { label, active } = this.props;
 
         return (
-            <Pressable
+            <TouchableOpacity
                 onPress={this.handlePress}
-                className={`h-10 justify-center flex-1 rounded-full ${active ? "bg-secondary" : "bg-primary"}`}
+                className={`h-10 justify-center flex-1 rounded-xl ${active ? "bg-secondary" : "bg-primary"}`}
             >
                 <Text className="text-center text-sm text-white">
                     {label}
                 </Text>
-            </Pressable>
+            </TouchableOpacity>
         );
     }
 }

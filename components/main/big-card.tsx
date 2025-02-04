@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { ImageBackground, Pressable, Text, View } from "react-native";
+import { ImageBackground, Text, TouchableOpacity, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { CardType } from "../../types/card";
 import { router } from "expo-router";
@@ -13,7 +13,7 @@ export class BigCard extends Component<CardType> {
         const props = this.props;
 
         return (
-            <Pressable 
+            <TouchableOpacity 
                 className="w-72 h-72 rounded-3xl overflow-hidden mx-3"
                 onPress={()=>this.handlePress(props.id)}
             >
@@ -32,7 +32,7 @@ export class BigCard extends Component<CardType> {
                         </View>
                     </LinearGradient>
                 </ImageBackground>
-            </Pressable>
+            </TouchableOpacity>
         );
     }
 }

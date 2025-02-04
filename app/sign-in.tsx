@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Image, Pressable, ScrollView, Text, View } from "react-native";
+import { Image, Pressable, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { InputText } from "../components/login/input-text";
 import { ButtonInput } from "../components/login/button";
@@ -98,11 +98,11 @@ class SignIn extends React.Component<{}, State> {
                             linkLabel="Cadastre-se"
                             nav={this.handleSignUp}
                         />
-                        <Pressable onPress={this.handleForgotPassword}>
+                        <TouchableOpacity onPress={this.handleForgotPassword}>
                             <Text className="text-center text-secondary font-bold">
                                 Esqueceu a Senha?
                             </Text>
-                        </Pressable>
+                        </TouchableOpacity>
                     </View>
                 </SafeAreaView>
             </ScrollView>

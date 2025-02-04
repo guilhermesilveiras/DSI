@@ -1,7 +1,7 @@
 import { LinearGradient } from "expo-linear-gradient";
-import { ImageBackground, Pressable, Text, View } from "react-native";
-import Icon from "@expo/vector-icons/FontAwesome6";
+import { ImageBackground } from "react-native";
 import React from "react";
+import { BackHeader } from "../main/back-header";
 
 interface HeaderDetailProps {
     img: string | undefined;
@@ -19,15 +19,7 @@ export class HeaderDetail extends React.Component<HeaderDetailProps> {
                     colors={['#0007', '#0000']}
                     className="w-full h-full"
                 >
-                    <View className="w-full flex-row items-center justify-between py-4 px-8">
-                        <Pressable onPress={handleBack}>
-                            <Icon name="arrow-left-long" size={20} color={"white"} />
-                        </Pressable>
-                        <Text className="text-xl text-white font-semibold">
-                            {city}
-                        </Text>
-                        <View></View>
-                    </View>
+                    <BackHeader mode="white" city={city} handleBack={handleBack}/>
                 </LinearGradient>
             </ImageBackground>
         );

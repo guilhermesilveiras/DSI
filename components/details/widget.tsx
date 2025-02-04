@@ -1,5 +1,5 @@
 import React from "react";
-import { Pressable, Text } from "react-native";
+import { Text, TouchableOpacity } from "react-native";
 
 interface WidgetProps {
     label: string;
@@ -10,11 +10,11 @@ export class Widget extends React.Component<WidgetProps> {
         const { label } = this.props;
 
         return (
-            <Pressable
-                className="w-32 rounded-full overflow-hidden bg-secondary py-4 items-center justify-center"
+            <TouchableOpacity
+                className="w-32 rounded-xl overflow-hidden bg-secondary py-4 items-center justify-center"
             >
                 <Text className="text-white">{label}</Text>
-            </Pressable>
+            </TouchableOpacity>
         );
     }
 }

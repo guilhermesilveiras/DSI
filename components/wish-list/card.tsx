@@ -1,4 +1,4 @@
-import { Pressable, Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import Animated, {
     SlideInLeft,
     SlideOutRight,
@@ -68,21 +68,21 @@ export const ListCard = ({ id, city, date, handleDelete, handleEdit }: Props) =>
                             {date}
                         </Text>
                     </View>
-                    <Pressable className="bg-white rounded-xl w-32 py-2 mx-auto">
+                    <TouchableOpacity className="bg-white rounded-xl w-32 py-2 mx-auto">
                         <Text className="text-center text-tertiary font-semibold">
                             Planejar
                         </Text>
-                    </Pressable>
+                    </TouchableOpacity>
                 </View>
                 <View className="flex-row items-center justify-end mt-4">
-                    <Pressable
+                    <TouchableOpacity
                         accessible={true}
                         accessibilityLabel="Editar"
                         onPress={() => handleEdit({ id, wish: city, date })}
                         className="rounded-xl relative p-4 -mt-80 ml-44"
                     >
                         <Icon name="edit" color={"white"} size={20} />
-                    </Pressable>
+                    </TouchableOpacity>
                 </View>
             </Animated.View>
         </GestureDetector>

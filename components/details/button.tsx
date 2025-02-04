@@ -1,5 +1,5 @@
 import React from "react";
-import { Pressable, Text } from "react-native";
+import { Text, TouchableOpacity } from "react-native";
 
 interface ButtonProps {
     city: string | undefined;
@@ -11,14 +11,14 @@ export class Button extends React.Component<ButtonProps> {
         const { city, handleAction } = this.props;
 
         return (
-            <Pressable 
+            <TouchableOpacity 
                 onPress={handleAction} 
-                className="w-full py-6 mt-16 bg-secondary rounded-full"
+                className="w-full py-4 mt-16 bg-secondary rounded-xl"
             >
                 <Text className="text-xl text-center text-white">
                     Planejar Viagem para {city}
                 </Text>
-            </Pressable>
+            </TouchableOpacity>
         );
     }
 }

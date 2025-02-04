@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-import { Pressable, Text, TextInput, View } from "react-native";
+import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import Icon from "@expo/vector-icons/FontAwesome5";
-import { useState } from "react";
 
 interface SearchState {
     location: string;
@@ -27,17 +26,17 @@ export class Search extends Component<{}, SearchState> {
                 <Text className="font-bold mb-2"></Text>
                 <View className="flex-row items-center w-full">
                     <TextInput
-                        className="border w-full bg-zinc-200 border-zinc-300 rounded-full px-8 focus:border-secondary"
+                        className="border w-full bg-zinc-200 border-zinc-300 rounded-xl px-8 focus:border-secondary"
                         placeholder="Para onde você quer viajar?"
                         value={location}
                         onChangeText={(e) => this.setState({ location: e })}
                     />
-                    <Pressable
+                    <TouchableOpacity
                         className="w-10 h-10 -ml-10 rounded-full justify-center items-center"
                         onPress={this.handlePress}
                     >
                         <Icon name="search-location" size={16} />
-                    </Pressable>
+                    </TouchableOpacity>
                 </View>
             </View>
         );

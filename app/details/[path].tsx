@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView, View } from "react-native";
-import { router, useLocalSearchParams } from "expo-router"; // Importa o hook
+import { router, useLocalSearchParams } from "expo-router";
 import { data } from "../../data/temp";
 import { HeaderDetail } from "../../components/details/header";
 import { Title } from "../../components/details/title";
@@ -10,6 +10,10 @@ import { Widget } from "../../components/details/widget";
 import { Prices } from "../../components/details/prices";
 import { Button } from "../../components/details/button";
 
+// Firebase imports
+import { getFirestore, doc, setDoc, collection } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+
 interface Item {
     id: string;
     img: string;
@@ -18,12 +22,14 @@ interface Item {
 }
 
 const Details = () => {
-    const { path } = useLocalSearchParams(); // Usa o hook para acessar os parâmetros da URL
-
+    const { path } = useLocalSearchParams();
     const [item, setItem] = useState<Item | undefined>(undefined);
 
+    const db = getFirestore();
+    const auth = getAuth();
+    const user = auth.currentUser;
+
     useEffect(() => {
-        // Quando o parâmetro 'path' mudar, buscamos o item correspondente
         if (path) {
             const foundItem = data.find((i) => i.id === path);
             setItem(foundItem);
@@ -34,8 +40,28 @@ const Details = () => {
         router.back();
     };
 
-    const handlePlan = (): void => {
-        // Função a ser implementada
+    const handlePlan = async (): Promise<void> => {
+        if (!user || !item) return;
+
+        try {
+            // Criando um ID único para cada viagem
+            const travelRef = doc(collection(db, `travelers/${user.email}/travels`));
+            const travelId = travelRef.id;
+
+            // Criando um novo documento de viagem no Firestore
+            await setDoc(travelRef, {
+                travelId,
+                city: item.city,
+                dates: {}, // Inicializa os gastos vazios
+            });
+            // Redireciona para a tela de planejamento usando o nome da cidade
+            router.push({
+                pathname: "/planning/[city]/[travelId]",
+                params: { city: item.city, travelId }
+            });
+        } catch (error) {
+            console.error("Erro ao criar a viagem:", error);
+        }
     };
 
     return (
@@ -47,14 +73,14 @@ const Details = () => {
             />
             <View className="w-full h-full px-8 py-12 bg-zinc-100 -mt-12 rounded-t-[50px]">
                 <Title label="Descrição" />
-                <Description label="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book." />
+                <Description label="Lorem Ipsum is simply dummy text of the printing and typesetting industry." />
                 <Bar />
                 <Title label="Gastos aproximados por dia:" />
                 <View className="w-full flex-row justify-center gap-8 mb-4">
                     <Widget label="U$ 78,83" />
                     <Widget label="$$$" />
                 </View>
-                <Title label="Preços mais pesquisados" />
+                <Title label="Preços mais pesquisados:" />
                 <Prices />
                 <Button city={item?.city || ""} handleAction={handlePlan} />
             </View>

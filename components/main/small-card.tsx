@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { ImageBackground, Pressable, Text, View } from "react-native";
+import { ImageBackground, Text, TouchableOpacity, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
 import { CardType } from "../../types/card";
@@ -17,7 +17,7 @@ export class SmallCard extends Component<Props> {
         const imageUrl = img;
 
         return (
-            <Pressable 
+            <TouchableOpacity 
                 className="w-full sm:w-44 h-44 rounded-3xl overflow-hidden"
                 onPress={this.handlePress}
             >
@@ -33,7 +33,7 @@ export class SmallCard extends Component<Props> {
                         </View>
                     </LinearGradient>
                 </ImageBackground>
-            </Pressable>
+            </TouchableOpacity>
         );
     }
 }

@@ -5,6 +5,7 @@ import {
     Text,
     View,
     FlatList,
+    TouchableOpacity,
 } from "react-native";
 import DateTimePicker, { DateTimePickerEvent } from "@react-native-community/datetimepicker";
 import { Input } from "../components/wish-list/wish-input";
@@ -122,14 +123,14 @@ class WishList extends Component<{}, WishListState> {
                             />
                         </View>
 
-                        <Pressable
+                        <TouchableOpacity
                             onPress={this.handleAddItem}
-                            className="w-52 rounded-full py-3 justify-center items-center bg-secondary"
+                            className="w-52 rounded-xl py-3 justify-center items-center bg-secondary"
                         >
                             <Text className="text-white font-semibold">
                                 {editingId ? "Atualizar item" : "Adicionar à lista"}
                             </Text>
-                        </Pressable>
+                        </TouchableOpacity>
 
                         {open && (
                             <DateTimePicker

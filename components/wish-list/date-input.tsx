@@ -17,7 +17,7 @@ export class DateInput extends React.Component<Props> {
             <View className="w-full">
                 <View className="flex-row items-center w-full">
                     <TextInput
-                        className="border w-full bg-zinc-200 border-zinc-300 rounded-full px-10 focus:border-secondary"
+                        className="border w-full bg-zinc-200 border-zinc-300 rounded-xl px-10 focus:border-secondary"
                         placeholder={placeholder}
                         value={value}
                         onFocus={handleDatePicker}
