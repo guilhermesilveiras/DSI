@@ -14,7 +14,7 @@ export class BigCard extends Component<CardType> {
 
         return (
             <TouchableOpacity 
-                className="w-72 h-72 rounded-3xl overflow-hidden mx-3"
+                className="w-72 h-72 rounded-3xl overflow-hidden mx-3 mb-5"
                 onPress={()=>this.handlePress(props.id)}
             >
                 <ImageBackground source={{ uri: props.img }} className="w-full h-full">
@@ -24,7 +24,7 @@ export class BigCard extends Component<CardType> {
                     >
                         <View className="m-3">
                             <Text className="text-white font-bold text-lg">
-                                {props.city}
+                                {props.cityPt}
                             </Text>
                             <Text className="text-white font-bold text-lg">
                                 📍{props.country}

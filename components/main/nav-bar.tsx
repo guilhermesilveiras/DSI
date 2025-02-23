@@ -9,10 +9,10 @@ type Props = {
 export class NavBar extends Component<Props> {
     renderNavButtons = (activePage: string) => {
         return (
-            <View className="flex-row flex-wrap justify-between items-center gap-4 px-10">
+            <View className="flex-row flex-wrap justify-between items-center gap-4 px-8">
                 <NavButton label="Home" active={activePage === "home"} route="/home" />
-                <NavButton label="Para você" active={activePage === "for-you"} route="/for-you" />
-                <NavButton label="planejamento" active={activePage === "planning"} route="/travels" />
+                <NavButton label="Para você" active={activePage === "search"} route="/search" />
+                <NavButton label="planejamento" active={activePage === "planning"} route="/trips" />
             </View>
         );
     };
@@ -23,7 +23,7 @@ export class NavBar extends Component<Props> {
         return (
             <>
                 {page === 'home' && this.renderNavButtons('home')}
-                {page === 'for-you' && this.renderNavButtons('for-you')}
+                {page === 'search' && this.renderNavButtons('search')}
                 {page === 'travels' && this.renderNavButtons('planning')}
             </>
         );

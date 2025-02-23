@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Image, Text, View } from "react-native";
-import { InputText } from "../login/input-text";
+import { InputText } from "../login/text-input";
 import { ButtonInput } from "../login/button";
 
 interface Props {

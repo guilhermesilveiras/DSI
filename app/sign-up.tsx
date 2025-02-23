@@ -1,13 +1,12 @@
 import React, { Component } from "react";
 import { Image, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { InputText } from "../components/login/input-text";
+import { InputText } from "../components/login/text-input";
 import { ButtonInput } from "../components/login/button";
 import { router } from "expo-router";
 import { LoginNav } from "../components/login/login-nav";
 import { handleCreateUser } from "../services/sign-up";
 
-// Tipagem do estado
 interface SignUpState {
     email: string;
     password: string;
@@ -32,7 +31,6 @@ class SignUp extends Component<{}, SignUpState> {
         };
     }
 
-    // Função de atualização do estado
     handleInputChange = (field: keyof SignUpState, value: string | boolean) => {
         this.setState({
             ...this.state,
@@ -40,7 +38,6 @@ class SignUp extends Component<{}, SignUpState> {
         });
     };
 
-    // Função de navegação para login
     handleSignIn = () => {
         router.navigate("/sign-in");
     };

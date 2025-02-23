@@ -13,7 +13,7 @@ export class SmallCard extends Component<Props> {
     };
 
     render() {
-        const { city, img } = this.props;
+        const { cityPt, img, country} = this.props;
         const imageUrl = img;
 
         return (
@@ -28,7 +28,10 @@ export class SmallCard extends Component<Props> {
                     >
                         <View className="m-3">
                             <Text className="text-white font-semibold text-lg">
-                                {city}
+                                {cityPt}
+                            </Text>
+                            <Text className="text-white font-bold text-lg">
+                                📍{country}
                             </Text>
                         </View>
                     </LinearGradient>

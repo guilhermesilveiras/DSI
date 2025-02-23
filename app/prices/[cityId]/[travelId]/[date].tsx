@@ -1,18 +1,17 @@
-import { SafeAreaView, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { SafeAreaView, ScrollView, Text, TouchableOpacity, View, ActivityIndicator, Alert } from "react-native";
 import { useEffect, useState } from "react";
 import { PriceList } from "../../../../components/prices/price-list";
 import { router, useLocalSearchParams } from "expo-router";
-import { data } from "../../../../data/temp";
+import axios from "axios";
 import { CardType } from "../../../../types/card";
 import { BackHeader } from "../../../../components/main/back-header";
 import { getFirestore, doc, updateDoc, getDoc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 
 export default function Prices() {
-    const { cityId, travelId, date } = useLocalSearchParams();
+    const { cityId, tripId, date } = useLocalSearchParams();
     const [item, setItem] = useState<CardType | undefined>(undefined);
-
-    // Estados dos valores financeiros
+    const [loading, setLoading] = useState<boolean>(true);
     const [fastFood, setFastFood] = useState<number>(0);
     const [localFood, setLocalFood] = useState<number>(0);
     const [taxiTax, setTaxiTax] = useState<number>(0);
@@ -23,16 +22,32 @@ export default function Prices() {
     const db = getFirestore();
     const auth = getAuth();
     const user = auth.currentUser;
-    const formattedDate = String(date) ?? ""; // Garante que a data seja uma string válida
+    const formattedDate = String(date) ?? "";
 
     useEffect(() => {
-        if (cityId) {
-            const foundItem = data.find((i) => i.id === cityId);
-            setItem(foundItem);
-        }
+        const fetchCityData = async () => {
+            try {
+                if (cityId) {
+                    const response = await axios.get(
+                        `https://dsi-api-2-danielsantana47s-projects.vercel.app/api/cities/${cityId}`
+                    );
+                    if (response.data) {
+                        setItem(response.data);
+                    } else {
+                        Alert.alert("Erro", "Cidade não encontrada na API.");
+                    }
+                }
+            } catch (error) {
+                console.error("Erro ao buscar cidade:", error);
+                Alert.alert("Erro", "Não foi possível carregar os dados da cidade.");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchCityData();
     }, [cityId]);
 
-    // Calcular total sempre que os valores mudarem
     useEffect(() => {
         setTotal(
             (item?.prices?.fastFood ? fastFood * item.prices.fastFood : 0) +
@@ -43,18 +58,17 @@ export default function Prices() {
         );
     }, [fastFood, localFood, taxiTax, uberTax, busTicket, item]);
 
-    // Carregar os valores do Firestore ao abrir a tela
     useEffect(() => {
-        if (!user || !travelId || !formattedDate) return;
+        if (!user || !tripId || !formattedDate) return;
 
         const fetchData = async () => {
             try {
-                const travelRef = doc(db, `travelers/${user.email}/travels/${travelId}`);
-                const travelDoc = await getDoc(travelRef);
+                const tripRef = doc(db, `travelers/${user.email}/trips/${tripId}`);
+                const tripDoc = await getDoc(tripRef);
 
-                if (travelDoc.exists()) {
-                    const travelData = travelDoc.data();
-                    const existingData = travelData.dates?.[formattedDate] || {};
+                if (tripDoc.exists()) {
+                    const tripData = tripDoc.data();
+                    const existingData = tripData.dates?.[formattedDate] || {};
 
                     setFastFood(existingData.fastFood ?? 0);
                     setLocalFood(existingData.localFood ?? 0);
@@ -62,7 +76,6 @@ export default function Prices() {
                     setUberTax(existingData.uberTax ?? 0);
                     setBusTicket(existingData.busTicket ?? 0);
                     setTotal(existingData.total ?? 0);
-                    console.log(total)
                 }
             } catch (error: any) {
                 alert("Erro ao carregar os valores: " + error.message);
@@ -70,69 +83,64 @@ export default function Prices() {
         };
 
         fetchData();
-    }, [user, travelId, formattedDate]);
+    }, [user, tripId, formattedDate]);
 
-    // Função para adicionar planejamento do dia ao Firestore
     const handleAddDayPlan = async () => {
-        if (!user || !travelId || !formattedDate) {
+        if (!user || !tripId || !formattedDate) {
             alert("Erro: Usuário, viagem ou data não encontrados.");
             return;
         }
 
         try {
-            const travelRef = doc(db, `travelers/${user.email}/travels/${travelId}`);
-            const travelDoc = await getDoc(travelRef);
+            const tripRef = doc(db, `travelers/${user.email}/trips/${tripId}`);
+            const tripDoc = await getDoc(tripRef);
 
-            if (!travelDoc.exists()) {
+            if (!tripDoc.exists()) {
                 alert("Erro: Viagem não encontrada.");
                 return;
             }
 
-            const travelData = travelDoc.data();
+            const tripData = tripDoc.data();
             const updatedDates = {
-                ...travelData.dates,
+                ...tripData.dates,
                 [formattedDate]: {
                     fastFood,
                     localFood,
                     taxiTax,
                     uberTax,
                     busTicket,
-                    total, // Adiciona o total ao Firestore
+                    total,
                 },
             };
 
-            console.log(total)
-
-            await updateDoc(travelRef, { dates: updatedDates });
+            await updateDoc(tripRef, { dates: updatedDates });
             router.back();
         } catch (error: any) {
             alert("Erro ao salvar planejamento: " + error.message);
         }
     };
 
-    // Função para remover o planejamento do Firestore
     const handleDeletePlan = async () => {
-        if (!user || !travelId || !formattedDate) {
+        if (!user || !tripId || !formattedDate) {
             alert("Erro: Usuário, viagem ou data não encontrados.");
             return;
         }
 
         try {
-            const travelRef = doc(db, `travelers/${user.email}/travels/${travelId}`);
-            const travelDoc = await getDoc(travelRef);
+            const tripRef = doc(db, `travelers/${user.email}/trips/${tripId}`);
+            const tripDoc = await getDoc(tripRef);
 
-            if (!travelDoc.exists()) {
+            if (!tripDoc.exists()) {
                 alert("Erro: Viagem não encontrada.");
                 return;
             }
 
-            const travelData = travelDoc.data();
-            const updatedDates = { ...travelData.dates };
+            const tripData = tripDoc.data();
+            const updatedDates = { ...tripData.dates };
 
-            // Remove a data selecionada
             delete updatedDates[formattedDate];
 
-            await updateDoc(travelRef, { dates: updatedDates });
+            await updateDoc(tripRef, { dates: updatedDates });
             router.back();
         } catch (error: any) {
             alert("Erro ao deletar planejamento: " + error.message);
@@ -140,29 +148,28 @@ export default function Prices() {
     };
 
     const handleBackButton = async () => {
-        if (!user || !travelId || !formattedDate) {
+        if (!user || !tripId || !formattedDate) {
             router.back();
             return;
         }
 
         try {
-            const travelRef = doc(db, `travelers/${user.email}/travels/${travelId}`);
-            const travelDoc = await getDoc(travelRef);
+            const tripRef = doc(db, `travelers/${user.email}/trips/${tripId}`);
+            const tripDoc = await getDoc(tripRef);
 
-            if (travelDoc.exists()) {
-                const travelData = travelDoc.data();
-                const existingData = travelData.dates?.[formattedDate] || {};
+            if (tripDoc.exists()) {
+                const tripData = tripDoc.data();
+                const existingData = tripData.dates?.[formattedDate] || {};
 
-                // Atualiza apenas o total no Firestore sem modificar os outros campos
                 const updatedDates = {
-                    ...travelData.dates,
+                    ...tripData.dates,
                     [formattedDate]: {
                         ...existingData,
-                        total, // Atualiza o total mantendo os outros valores inalterados
+                        total,
                     },
                 };
 
-                await updateDoc(travelRef, { dates: updatedDates });
+                await updateDoc(tripRef, { dates: updatedDates });
             }
         } catch (error: any) {
             alert("Erro ao atualizar total: " + error.message);
@@ -171,41 +178,43 @@ export default function Prices() {
         router.back();
     };
 
-
     return (
         <SafeAreaView className="bg-background">
-            <ScrollView>
+            {loading ? (
+                <ActivityIndicator size="large" color="#000" />
+            ) : (
+                <ScrollView>
+                    <BackHeader mode="primary" city={item?.cityPt} handleBack={handleBackButton} />
+                    <PriceList
+                        prices={item?.prices}
+                        fastFood={fastFood}
+                        setFastFood={setFastFood}
+                        localFood={localFood}
+                        setLocalFood={setLocalFood}
+                        taxiTax={taxiTax}
+                        setTaxiTax={setTaxiTax}
+                        busTicket={busTicket}
+                        setBusTicket={setBusTicket}
+                        uberTax={uberTax}
+                        setUberTax={setUberTax}
+                        total={total}
+                        setTotal={setTotal}
+                    />
+                    <View className="gap-4">
+                        <TouchableOpacity onPress={handleAddDayPlan} className="py-4 mt-12 bg-secondary mx-12 rounded-xl">
+                            <View>
+                                <Text className="mx-auto text-white font-semibold">Planejar dia</Text>
+                            </View>
+                        </TouchableOpacity>
 
-                <BackHeader mode="primary" city={item?.city} handleBack={handleBackButton} />
-                <PriceList
-                    prices={item?.prices}
-                    fastFood={fastFood}
-                    setFastFood={setFastFood}
-                    localFood={localFood}
-                    setLocalFood={setLocalFood}
-                    taxiTax={taxiTax}
-                    setTaxiTax={setTaxiTax}
-                    busTicket={busTicket}
-                    setBusTicket={setBusTicket}
-                    uberTax={uberTax}
-                    setUberTax={setUberTax}
-                    total={total}
-                    setTotal={setTotal}
-                />
-                <View className="gap-4">
-                    <TouchableOpacity onPress={handleAddDayPlan} className="py-4 mt-12 bg-secondary mx-12 rounded-xl">
-                        <View>
-                            <Text className="mx-auto text-white font-semibold">Planejar dia</Text>
-                        </View>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity onPress={handleDeletePlan} className="py-4 bg-zinc-300 mx-12 rounded-xl mb-8 invisible">
-                        <View>
-                            <Text className="mx-auto text-red-500 font-semibold">Deletar planejamento</Text>
-                        </View>
-                    </TouchableOpacity>
-                </View>
-            </ScrollView>
+                        <TouchableOpacity onPress={handleDeletePlan} className="py-4 bg-zinc-300 mx-12 rounded-xl mb-8 invisible">
+                            <View>
+                                <Text className="mx-auto text-red-500 font-semibold">Deletar planejamento</Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
+                </ScrollView>
+            )}
         </SafeAreaView>
     );
 }

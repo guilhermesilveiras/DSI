@@ -2,10 +2,9 @@ import React, { Component } from "react";
 import { SafeAreaView, ScrollView } from "react-native";
 import { Welcome } from "../components/main/welcome";
 import { NavBar } from "../components/main/nav-bar";
-import { Search } from "../components/home/search";
+import { Header } from "../components/main/header";
 import { Sugestions } from "../components/home/suggestions";
 import { MostVisited } from "../components/home/most-visited";
-import { Header } from "../components/main/header";
 
 class Home extends Component {
     render() {
@@ -15,9 +14,8 @@ class Home extends Component {
                     <Header />
                     <Welcome />
                     <NavBar page="home" />
-                    <Search />
-                    <Sugestions />
                     <MostVisited />
+                    <Sugestions />
                 </SafeAreaView>
             </ScrollView>
         );

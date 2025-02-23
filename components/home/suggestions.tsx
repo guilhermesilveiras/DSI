@@ -1,46 +1,67 @@
 import React, { Component } from "react";
-import { FlatList } from "react-native";
-import { BigCard } from "../main/big-card";
-import { data } from "../../data/temp";
+import { View, ActivityIndicator, Alert } from "react-native";
+import { SmallCard } from "../main/small-card";
+import { Title } from "../main/title";
+import axios from "axios";
+import { CardType } from "../../types/card";
 
-interface SuggestionItem {
-    id: string;
-    city: string;
-    country: string;
-    img: string;
+interface State {
+    data: CardType[];
+    loading: boolean;
 }
 
-interface SuggestionsState {
-    dataTemp: SuggestionItem[];
-}
-
-export class Sugestions extends Component<{}, SuggestionsState> {
+export class Sugestions extends Component<{}, State> {
     constructor(props: {}) {
         super(props);
         this.state = {
-            dataTemp: data.filter((item) => parseInt(item.id) < 3),
+            data: [],
+            loading: true,
         };
     }
 
+    async componentDidMount() {
+        try {
+            const response = await axios.get("https://dsi-api-2-danielsantana47s-projects.vercel.app/api/cities");
+            const filteredData = response.data.filter((item: CardType) => parseInt(item.id) > 2 && parseInt(item.id) < 7);
+            this.setState({ data: filteredData, loading: false });
+        } catch (error) {
+            Alert.alert("Erro", "Não foi possível carregar as sugestões.");
+            this.setState({ loading: false });
+        }
+    }
+
     render() {
-        const { dataTemp } = this.state;
+        const { data, loading } = this.state;
 
         return (
-            <FlatList
-                data={dataTemp}
-                renderItem={({ item }) => (
-                    <BigCard
-                        id={item.id}
-                        city={item.city}
-                        country={item.country}
-                        img={item.img}
-                    />
+            <View className="w-full mt-10 px-8">
+                <Title label="Sugestões" />
+                {loading ? (
+                    <ActivityIndicator size="large" color="#024554" />
+                ) : (
+                    <View className="flex-row gap-5 flex-wrap">
+                        {data.map((item) => (
+                            <SmallCard
+                                key={item.id}
+                                id={item.id}
+                                city={item.city}
+                                cityPt={item.cityPt}
+                                country={item.country}
+                                continent={item.continent}
+                                prices={item.prices}
+                                popular={item.popular}
+                                subRegion={item.subRegion}
+                                description={item.description}
+                                location={{
+                                    latitude: item.location.latitude,
+                                    longitude: item.location.longitude,
+                                }}
+                                img={item.img}
+                            />
+                        ))}
+                    </View>
                 )}
-                keyExtractor={(item) => item.id}
-                horizontal={true}
-                className="ml-8 pb-2"
-                showsHorizontalScrollIndicator={false}
-            />
+            </View>
         );
     }
 }

@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity } from "react-native";
 import { Calendar, DateData, LocaleConfig } from "react-native-calendars";
 import { Feather } from "@expo/vector-icons";
 import { db } from "../../firebaseConfig";
-import { doc, updateDoc, getDoc, deleteField, deleteDoc } from "firebase/firestore";
+import { doc, updateDoc, getDoc, deleteDoc } from "firebase/firestore";
 import { ptBR } from "../../utils/localeCalendarConfig";
 import { styles } from "./styles";
 import { router } from "expo-router";
@@ -32,7 +32,7 @@ export const PlanningCalendar = ({ cityId, path }: Props) => {
             }
         });
 
-        return () => unsubscribe(); // Remove o listener quando o componente desmonta
+        return () => unsubscribe();
     }, []);
 
     // Carregar os dias selecionados ao abrir o calendário
@@ -41,14 +41,14 @@ export const PlanningCalendar = ({ cityId, path }: Props) => {
 
         const fetchSelectedDays = async () => {
             try {
-                const travelId = path as string;
-                const travelRef = doc(db, `travelers/${userEmail}/travels/${travelId}`);
-                const travelDoc = await getDoc(travelRef);
+                const tripId = path as string;
+                const tripRef = doc(db, `travelers/${userEmail}/trips/${tripId}`);
+                const tripDoc = await getDoc(tripRef);
 
-                if (travelDoc.exists()) {
-                    const travelData = travelDoc.data();
-                    const savedDates = Object.keys(travelData.dates || {}); // Obtém todas as datas salvas
-                    setSelectedDays(savedDates); // Mantém os dias marcados ao carregar
+                if (tripDoc.exists()) {
+                    const tripData = tripDoc.data();
+                    const savedDates = Object.keys(tripData.dates || {});
+                    setSelectedDays(savedDates);
                 }
             } catch (error: any) {
                 console.error("Erro ao carregar os dias planejados:", error.message);
@@ -56,40 +56,36 @@ export const PlanningCalendar = ({ cityId, path }: Props) => {
         };
 
         fetchSelectedDays();
-    }, [userEmail, path]); // Carrega apenas quando o usuário ou viagem mudar
+    }, [userEmail, path]); 
 
-    // Função para adicionar ou atualizar o planejamento no Firestore
     const handleDayPress = async (day: DateData) => {
         if (!userEmail || !path) {
             console.log("Usuário não autenticado ou ID da viagem ausente.");
             return;
         }
     
-        const travelId = path as string;
-        const travelRef = doc(db, `travelers/${userEmail}/travels/${travelId}`);
+        const tripId = path as string;
+        const tripRef = doc(db, `travelers/${userEmail}/trips/${tripId}`);
     
         try {
-            const travelDoc = await getDoc(travelRef);
-            if (!travelDoc.exists()) {
+            const tripDoc = await getDoc(tripRef);
+            if (!tripDoc.exists()) {
                 console.log("Viagem não encontrada.");
                 return;
             }
     
-            const travelData = travelDoc.data();
+            const travelData = tripDoc.data();
             const existingDates = travelData.dates || {};
             const dayExists = existingDates[day.dateString];
     
             if (dayExists) {
-                // Remove o dia do Firestore
                 const updatedDates = { ...existingDates };
                 delete updatedDates[day.dateString];
     
-                await updateDoc(travelRef, { dates: updatedDates });
+                await updateDoc(tripRef, { dates: updatedDates });
     
-                // Atualiza o estado apenas após a remoção do banco
                 setSelectedDays((prevDays) => prevDays.filter((date) => date !== day.dateString));
             } else {
-                // Adiciona o dia ao Firestore
                 const newDayPlan = {
                     fastFood: 0,
                     localFood: 0,
@@ -103,13 +99,13 @@ export const PlanningCalendar = ({ cityId, path }: Props) => {
                     [day.dateString]: newDayPlan,
                 };
     
-                await updateDoc(travelRef, { dates: updatedDates });
+                await updateDoc(tripRef, { dates: updatedDates });
     
                 // Atualiza o estado apenas após a adição no banco
                 setSelectedDays((prevDays) => [...prevDays, day.dateString]);
     
                 // Redireciona para a tela de preços
-                router.push(`/prices/${cityId}/${travelId}/${day.dateString}`);
+                router.push(`/prices/${cityId}/${tripId}/${day.dateString}`);
             }
         } catch (error: any) {
             alert("Erro ao atualizar planejamento: " + error.message);
@@ -123,12 +119,12 @@ export const PlanningCalendar = ({ cityId, path }: Props) => {
                 return;
             }
         
-            const travelId = path as string;
-            const travelRef = doc(db, `travelers/${userEmail}/travels/${travelId}`);
+            const tripId = path as string;
+            const tripRef = doc(db, `travelers/${userEmail}/trips/${tripId}`);
         
             try {
-                await deleteDoc(travelRef);
-                router.replace("/travels"); // Redireciona para a tela de viagens
+                await deleteDoc(tripRef);
+                router.replace("/trips"); // Redireciona para a tela de viagens
             } catch (error: any) {
                 console.error("Erro ao excluir planejamento:", error.message);
                 alert("Erro ao excluir planejamento: " + error.message);
@@ -136,7 +132,7 @@ export const PlanningCalendar = ({ cityId, path }: Props) => {
         };
 
     const handleFinishPlan = () => {
-        router.replace("/travels");
+        router.replace("/trips");
     };
 
     return (

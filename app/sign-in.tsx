@@ -1,13 +1,12 @@
-import React, { useState } from "react";
-import { Image, Pressable, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import React from "react";
+import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { InputText } from "../components/login/input-text";
+import { InputText } from "../components/login/text-input";
 import { ButtonInput } from "../components/login/button";
 import { router } from "expo-router";
 import { LoginNav } from "../components/login/login-nav";
 import { handleSignIn } from "../services/login";
 
-// Definindo o tipo de estado explicitamente
 interface State {
     email: string;
     password: string;
@@ -26,7 +25,6 @@ class SignIn extends React.Component<{}, State> {
         };
     }
 
-    // Função para atualizar o estado com a chave correta
     handleInputChange = (field: keyof State, value: string) => {
         this.setState({
             ...this.state,
@@ -44,8 +42,8 @@ class SignIn extends React.Component<{}, State> {
 
     render() {
         return (
-            <ScrollView>
-                <SafeAreaView className="w-full items-center p-12 bg-background">
+            <ScrollView className="h-full bg-background">
+                <SafeAreaView className="items-center p-12">
                     <Image
                         className="m-8 h-52 w-52"
                         source={require("../assets/dark-logo.png")}

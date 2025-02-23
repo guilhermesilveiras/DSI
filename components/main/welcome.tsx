@@ -36,7 +36,6 @@ export class Welcome extends Component<{}, State> {
             }
         });
 
-        // Cancela a inscrição ao desmontar o componente
         return () => unsubscribe();
     }
 
@@ -44,7 +43,7 @@ export class Welcome extends Component<{}, State> {
         const { userName } = this.state;
 
         return (
-            <View className="w-full px-10 pb-10">
+            <View className="w-full px-8 pb-10">
                 <Text className="text-4xl text-tertiary">Olá {userName}!</Text>
                 <Text className="text-md text-zinc-500 mt-2">
                     Comece a planejar sua viagem.

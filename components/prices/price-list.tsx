@@ -1,26 +1,10 @@
 import React from "react";
 import { View } from "react-native";
 import { PriceCard } from "./price-card";
-import { PricesType } from "../../types/prices";
 import { TotalCard } from "./totalCard";
+import { PriceListType } from "../../types/price-list";
 
-type Props = {
-    prices: PricesType | undefined;
-    fastFood: number;
-    setFastFood: (n: number) => void;
-    localFood: number;
-    setLocalFood: (n: number) => void;
-    taxiTax: number;
-    setTaxiTax: (n: number) => void;
-    busTicket: number;
-    setBusTicket: (n: number) => void;
-    uberTax: number;
-    setUberTax: (n: number) => void;
-    total: number;
-    setTotal: (n: number) => void;
-};
-
-export class PriceList extends React.Component<Props> {
+export class PriceList extends React.Component<PriceListType> {
     render() {
         const { 
             prices, fastFood, setFastFood, localFood, setLocalFood, 
