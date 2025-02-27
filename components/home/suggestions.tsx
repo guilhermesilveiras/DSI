@@ -1,12 +1,14 @@
 import React, { Component } from "react";
-import { View, ActivityIndicator, Alert } from "react-native";
+import { View, ActivityIndicator, FlatList } from "react-native";
 import { SmallCard } from "../main/small-card";
 import { Title } from "../main/title";
-import axios from "axios";
-import { CardType } from "../../types/card";
+import { CityType } from "../../types/city";
+import { NoContent } from "../trips/no-content";
+import { router } from "expo-router";
+import { fetchSuggestions } from "../../services/api";
 
 interface State {
-    data: CardType[];
+    data: CityType[];
     loading: boolean;
 }
 
@@ -19,30 +21,30 @@ export class Sugestions extends Component<{}, State> {
         };
     }
 
-    async componentDidMount() {
-        try {
-            const response = await axios.get("https://dsi-api-2-danielsantana47s-projects.vercel.app/api/cities");
-            const filteredData = response.data.filter((item: CardType) => parseInt(item.id) > 2 && parseInt(item.id) < 7);
-            this.setState({ data: filteredData, loading: false });
-        } catch (error) {
-            Alert.alert("Erro", "Não foi possível carregar as sugestões.");
-            this.setState({ loading: false });
-        }
+    componentDidMount() {
+        fetchSuggestions({
+            setData: (data) => this.setState({ data }),
+            setLoading: (loading) => this.setState({ loading }),
+        });
+    }
+
+    handleProfile() {
+        router.navigate('/profile')
     }
 
     render() {
-        const { data, loading } = this.state;
-
+        const { data, loading } = this.state
         return (
             <View className="w-full mt-10 px-8">
-                <Title label="Sugestões" />
+                <Title label="Sugestões Personalizadas" />
                 {loading ? (
                     <ActivityIndicator size="large" color="#024554" />
                 ) : (
-                    <View className="flex-row gap-5 flex-wrap">
-                        {data.map((item) => (
+                    <FlatList
+                        data={data}
+                        keyExtractor={(item) => item.id}
+                        renderItem={({ item }) => (
                             <SmallCard
-                                key={item.id}
                                 id={item.id}
                                 city={item.city}
                                 cityPt={item.cityPt}
@@ -57,9 +59,13 @@ export class Sugestions extends Component<{}, State> {
                                     longitude: item.location.longitude,
                                 }}
                                 img={item.img}
-                            />
-                        ))}
-                    </View>
+                                />
+                        )}
+                        ListEmptyComponent={() => (
+                            <NoContent label="nenhuma preferência cadastrada no perfil" icon="earth-off" handlePress={this.handleProfile}/>
+                        )}
+                        contentContainerStyle={{ paddingBottom: 20 }}
+                    />
                 )}
             </View>
         );

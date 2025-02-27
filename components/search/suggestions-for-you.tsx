@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { FlatList, View } from "react-native";
-import { CardType } from "../../types/card";
+import { CityType } from "../../types/city";
 
 interface State {
-    dataTemp: CardType[];
+    dataTemp: CityType[];
 }
 
 export class SugestionsForYou extends Component<{}, State> {

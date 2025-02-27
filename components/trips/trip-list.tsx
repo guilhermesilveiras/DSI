@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, View, ActivityIndicator } from "react-native";
+import { View, ActivityIndicator } from "react-native";
 import { Title } from "../main/title";
 import { TripCard } from "./trip-card";
 import { getFirestore, collection, getDocs } from "firebase/firestore";

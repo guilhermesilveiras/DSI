@@ -8,17 +8,13 @@ export class Header extends Component {
         router.navigate('/wish-list');
     };
 
-    handleProfileButton = ()=> {
-        router.navigate('/profile')
-    }
-
     render() {
         return (
-            <View className="w-full flex-row items-center justify-between px-8 py-8">
+            <View className="w-full flex-row items-center justify-between px-10 py-8">
                 <TouchableOpacity onPress={this.handleListButton}>
                     <Icon name="list-ul" size={24} color={"#002932"} />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={this.handleProfileButton}>
+                <TouchableOpacity>
                     <Icon name="user-circle" size={24} color={"#002932"} />
                 </TouchableOpacity>
             </View>

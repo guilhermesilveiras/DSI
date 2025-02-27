@@ -11,7 +11,7 @@ export class NavBar extends Component<Props> {
         return (
             <View className="flex-row flex-wrap justify-between items-center gap-4 px-8">
                 <NavButton label="Home" active={activePage === "home"} route="/home" />
-                <NavButton label="Para você" active={activePage === "search"} route="/search" />
+                <NavButton label="Busca" active={activePage === "search"} route="/search" />
                 <NavButton label="planejamento" active={activePage === "planning"} route="/trips" />
             </View>
         );

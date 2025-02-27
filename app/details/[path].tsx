@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { Component } from "react";
 import { ScrollView, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
-import axios from "axios";
 import { HeaderDetail } from "../../components/details/header";
 import { Title } from "../../components/details/title";
 import { Description } from "../../components/details/description";
@@ -9,42 +8,43 @@ import { Bar } from "../../components/details/bar";
 import { Widget } from "../../components/details/widget";
 import { Prices } from "../../components/details/prices";
 import { Button } from "../../components/details/button";
-import { CardType } from "../../types/card";
 import { getFirestore, doc, setDoc, collection } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
+import { fetchCityData } from "../../services/api";
+import { CityType } from "../../types/city";
 
-const CityDetails = () => {
-    const { path } = useLocalSearchParams();
-    const [item, setItem] = useState<CardType | undefined>(undefined);
+interface CityDetailsProps {
+    path: string;
+}
 
-    const db = getFirestore();
-    const auth = getAuth();
-    const user = auth.currentUser;
+interface CityDetailsState {
+    item?: CityType;
+}
 
-    useEffect(() => {
-        const fetchCityDetails = async () => {
-            try {
-                if (!path) return;
-                const response = await axios.get(`https://dsi-api-2-danielsantana47s-projects.vercel.app/api/cities/${path}`);
-                setItem(response.data);
-            } catch (error) {
-                console.error("Erro ao buscar detalhes da cidade:", error);
-            }
-        };
+class CityDetails extends Component<CityDetailsProps, CityDetailsState> {
+    private db = getFirestore();
+    private auth = getAuth();
+    private user = this.auth.currentUser;
 
-        fetchCityDetails();
-    }, [path]);
+    constructor(props: CityDetailsProps) {
+        super(props);
+        this.state = { item: undefined };
+    }
 
-    const handleBackButton = (): void => {
+    componentDidMount(): void {
+        fetchCityData({ path: this.props.path, setItem: (item: CityType) => this.setState({ item }) });
+    }
+
+    private handleBackButton = (): void => {
         router.back();
     };
 
-    const handlePlan = async (): Promise<void> => {
-        if (!user || !item) return;
+    private handlePlan = async (): Promise<void> => {
+        const { item } = this.state;
+        if (!this.user || !item) return;
 
         try {
-            // Criando um ID único para cada viagem
-            const tripRef = doc(collection(db, `travelers/${user.email}/trips`));
+            const tripRef = doc(collection(this.db, `travelers/${this.user.email}/trips`));
             const tripId = tripRef.id;
             await setDoc(tripRef, {
                 tripId,
@@ -53,47 +53,56 @@ const CityDetails = () => {
             });
             router.push({
                 pathname: "/planning/[city]/[tripId]",
-                params: { city: item.cityPt, tripId }
+                params: { city: item.cityPt, tripId },
             });
         } catch (error) {
             console.error("Erro ao criar a viagem:", error);
         }
     };
 
-    const handleShowLocation = () => {
+    private handleShowLocation = (): void => {
+        const { item } = this.state;
         router.push({
             pathname: "/map/[path]",
-            params: { path: item?.id }
+            params: { path: item?.id },
         });
     };
 
-    return (
-        <ScrollView>
-            <HeaderDetail
-                img={item?.img || ""}
-                city={item?.cityPt || ""}
-                handleBack={handleBackButton}
-            />
-            <View className="w-full h-full px-8 py-12 bg-zinc-100 -mt-12 rounded-t-[50px]">
-                <Title label="Descrição" />
-                <Description label={item?.description || "Sem descrição disponível."} />
-                <Bar />
-                <Title label="Gastos aproximados por refeição:" />
-                <View className="w-full flex-row justify-center gap-8 mb-4">
-                    <Widget label={`U$ ${item?.prices?.localFood.toFixed(2) || "0.00"}`} />
-                    <Widget label={`U$ ${item?.prices?.fastFood.toFixed(2) || "0.00"}`} />
-                </View>
-                <View className="hidden invisible">
-                    <Title label="Preços mais pesquisados:" />
-                    <Prices />
-                </View>
-                    <View className="mt-16 gap-5">
-                        <Button label={`Ver localização de ${item?.cityPt}`} handleAction={handleShowLocation} />
-                        <Button label={`Planejar viagem para ${item?.cityPt}`} handleAction={handlePlan} />
+    render() {
+        const { item } = this.state;
+        return (
+            <ScrollView>
+                <HeaderDetail
+                    img={item?.img || ""}
+                    city={item?.cityPt || ""}
+                    handleBack={this.handleBackButton}
+                />
+                <View className="w-full h-full px-8 py-12 bg-zinc-100 -mt-12 rounded-t-[50px]">
+                    <Title label="Descrição" />
+                    <Description label={item?.description || "Sem descrição disponível."} />
+                    <Bar />
+                    <Title label="Gastos aproximados por refeição:" />
+                    <View className="w-full flex-row justify-center gap-8 mb-4">
+                        <Widget label={`U$ ${item?.prices?.localFood.toFixed(2) || "0.00"}`} />
+                        <Widget label={`U$ ${item?.prices?.fastFood.toFixed(2) || "0.00"}`} />
                     </View>
-            </View>
-        </ScrollView>
-    );
+                    <View className="hidden invisible">
+                        <Title label="Preços mais pesquisados:" />
+                        <Prices />
+                    </View>
+                    <View className="mt-16 gap-5">
+                        <Button label={`Ver localização de ${item?.cityPt}`} handleAction={this.handleShowLocation} />
+                        <Button label={`Planejar viagem para ${item?.cityPt}`} handleAction={this.handlePlan} />
+                    </View>
+                </View>
+            </ScrollView>
+        );
+    }
+}
+
+const CityDetailsWrapper = () => {
+    const { path } = useLocalSearchParams();
+    return <CityDetails path={path as string} />;
 };
 
-export default CityDetails;
+export default CityDetailsWrapper;

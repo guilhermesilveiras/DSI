@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { ImageBackground, Text, TouchableOpacity, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { CardType } from "../../types/card";
+import { CityType } from "../../types/city";
 import { router } from "expo-router";
 
-export class BigCard extends Component<CardType> {
+export class BigCard extends Component<CityType> {
     handlePress = (id: string) => {
         router.push(`details/${id}`);
     };

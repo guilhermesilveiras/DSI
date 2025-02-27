@@ -3,6 +3,7 @@ import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { InputType } from "../../types/input";
 import Icon from "@expo/vector-icons/FontAwesome6";
 import { ErrorText } from "./error-text";
+import { SuccessText } from "./success-text";
 
 export class InputText extends Component<InputType> {
 
@@ -14,7 +15,7 @@ export class InputText extends Component<InputType> {
     };
 
     render() {
-        const { label, placeholder, value, setValue, hide, showPassword, error, editable } = this.props;
+        const { label, placeholder, value, setValue, hide, showPassword, error, editable, success } = this.props;
 
         return (
             <View className="w-full mb-8 gap-1">
@@ -59,7 +60,7 @@ export class InputText extends Component<InputType> {
                                 <ErrorText text="Email inválido" />
                             )}
                             {error && error === 'missing-email' && (
-                                <ErrorText text="Email inválido" />
+                                <ErrorText text="Email não pode ser vazio" />
                             )}
                             {error && error === 'email-already-in-use' && value !== '' && (
                                 <ErrorText text="Email já cadastrado" />
@@ -76,6 +77,9 @@ export class InputText extends Component<InputType> {
                             {error && error === 'invalid-country' && (
                                 <ErrorText text="País digitado não cadastrado" />
                             )}
+                            {success === 'success-fg-password' &&
+                                <SuccessText text="Email de redefinição enviado"/>
+                            }
                         </View>
                     )}
                     {showPassword && showPassword.showPassord && (

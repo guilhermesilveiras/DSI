@@ -5,7 +5,7 @@ import { InputText } from "../components/login/text-input";
 import { ButtonInput } from "../components/login/button";
 import { router } from "expo-router";
 import { LoginNav } from "../components/login/login-nav";
-import { handleSignIn } from "../services/login";
+import { handleSignIn } from "../services/sign-in";
 
 interface State {
     email: string;

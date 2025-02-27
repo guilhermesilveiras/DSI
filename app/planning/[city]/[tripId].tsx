@@ -1,54 +1,55 @@
-import React, { useEffect, useState } from "react";
-import { SafeAreaView, ActivityIndicator, Alert } from "react-native";
+import React, { Component } from "react";
+import { SafeAreaView, ActivityIndicator } from "react-native";
 import { PlanningCalendar } from "../../../components/planning/calendar";
 import { BackHeader } from "../../../components/main/back-header";
 import { router, useLocalSearchParams } from "expo-router";
-import axios from "axios";
-import { CardType } from "../../../types/card";
+import { CityType } from "../../../types/city";
+import { fetchCity } from "../../../services/api";
 
-export default function Planning() {
-    const { city, tripId } = useLocalSearchParams();
-    const [item, setItem] = useState<CardType | undefined>(undefined);
-    const [loading, setLoading] = useState<boolean>(true);
+interface PlanningProps {
+    city: string;
+    tripId: string;
+}
 
-    useEffect(() => {
-        const fetchCity = async () => {
-            try {
-                if (city) {
-                    const response = await axios.get(
-                        `https://dsi-api-2-danielsantana47s-projects.vercel.app/api/cities/name/${city}`
-                    );
-                    if (response.data.length > 0) {
-                        setItem(response.data[0]); // Pega a primeira cidade correspondente
-                    } else {
-                        Alert.alert("Erro", "Cidade não encontrada na API.");
-                    }
-                }
-            } catch (error) {
-                console.error("Erro ao buscar cidade:", error);
-                Alert.alert("Erro", "Não foi possível carregar os dados da cidade.");
-            } finally {
-                setLoading(false);
-            }
-        };
+interface PlanningState {
+    item?: CityType;
+    loading: boolean;
+}
 
-        fetchCity();
-    }, [city]);
+class Planning extends Component<PlanningProps, PlanningState> {
+    constructor(props: PlanningProps) {
+        super(props);
+        this.state = { item: undefined, loading: true };
+    }
 
-    const handleBackButton = () => {
+    componentDidMount(): void {
+        fetchCity({ city: this.props.city, setItem: (item: CityType) => this.setState({ item }), setLoading: (loading: boolean) => this.setState({ loading }) });
+    }
+
+    private handleBackButton = (): void => {
         router.back();
     };
 
-    return (
-        <SafeAreaView className="flex-1 bg-background">
-            {loading ? (
-                <ActivityIndicator size="large" color="#000" />
-            ) : (
-                <>
-                    <BackHeader mode="primary" city={item?.cityPt} handleBack={handleBackButton} />
-                    <PlanningCalendar cityId={item?.id} path={tripId} />
-                </>
-            )}
-        </SafeAreaView>
-    );
+    render() {
+        const { item, loading } = this.state;
+        return (
+            <SafeAreaView className="flex-1 bg-background">
+                {loading ? (
+                    <ActivityIndicator size="large" color="#000" />
+                ) : (
+                    <>
+                        <BackHeader mode="primary" city={item?.cityPt} handleBack={this.handleBackButton} />
+                        <PlanningCalendar cityId={item?.id} path={this.props.tripId} />
+                    </>
+                )}
+            </SafeAreaView>
+        );
+    }
 }
+
+const PlanningWrapper = () => {
+    const { city, tripId } = useLocalSearchParams();
+    return <Planning city={city as string} tripId={tripId as string} />;
+};
+
+export default PlanningWrapper;

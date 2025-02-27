@@ -10,4 +10,5 @@ export type InputType = {
     },
     setValue: (s: string) => void
     editable?: boolean
+    success?: string
 } 

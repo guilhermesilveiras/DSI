@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import { FlatList, View, ActivityIndicator } from "react-native";
-import axios from "axios";
 import { BigCard } from "../main/big-card";
-import { CardType } from "../../types/card";
+import { CityType } from "../../types/city";
 import { Title } from "../main/title";
+import { fetchPopularCities } from "../../services/api";
 
 interface SuggestionsState {
-    dataTemp: CardType[];
+    dataTemp: CityType[];
     loading: boolean;
 }
 
@@ -20,18 +20,23 @@ export class MostVisited extends Component<{}, SuggestionsState> {
     }
 
     componentDidMount() {
-        this.fetchPopularCities();
+        this.fetchData();
     }
 
-    async fetchPopularCities() {
-        try {
-            const response = await axios.get("https://dsi-api-2-danielsantana47s-projects.vercel.app/api/cities/popular");
-            this.setState({ dataTemp: response.data, loading: false });
-        } catch (error) {
-            console.error("Erro ao buscar cidades populares:", error);
-            this.setState({ loading: false });
-        }
-    }
+    fetchData = () => {
+        fetchPopularCities({
+            setDataTemp: this.setDataTemp,
+            setIsLoading: this.setIsLoading
+        });
+    };
+
+    setDataTemp = (dataTemp: CityType[]) => {
+        this.setState({ dataTemp });
+    };
+
+    setIsLoading = (loading: boolean) => {
+        this.setState({ loading });
+    };
 
     render() {
         const { dataTemp, loading } = this.state;
@@ -64,7 +69,7 @@ export class MostVisited extends Component<{}, SuggestionsState> {
                         )}
                         keyExtractor={(item) => item.id}
                         horizontal={true}
-                        className="pb-2"
+                        className="pb-2 -ml-3"
                         showsHorizontalScrollIndicator={false}
                     />
                 )}

@@ -27,7 +27,8 @@ export const handleCreateUser = async ({email, password, passwordConfirmation, n
             const docRef = doc(db, "travelers", email);
             await setDoc(docRef, { name: name }, { merge: true });
             setDoc(docRef, { name: name }, { merge: true })
-            console.log("usuário criado com sucesso")
+            setErrorMessage('')
+            console.log("usuário criado")
             router.replace("/home")
         } catch (error) {
             if (error instanceof FirebaseError) {
