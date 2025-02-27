@@ -1,26 +1,45 @@
-import React, {useEffect} from "react"
-import { View, Image, StatusBar } from "react-native"
-import { useRouter } from "expo-router";
+import React, { Component } from "react";
+import { View, Image, StatusBar } from "react-native";
+import { router } from "expo-router";
 
-const PreLogin = () =>{
-    const router = useRouter();
-    useEffect(() => {
+interface State {
+    timer: NodeJS.Timeout | null;
+}
+
+class PreLogin extends Component<{}, State> {
+    constructor(props: {}) {
+        super(props);
+        this.state = {
+            timer: null,
+        };
+    }
+
+    componentDidMount() {
         const timer = setTimeout(() => {
-            router.replace("/login");
+            router.replace("/sign-in");
         }, 2500);
-        return () => clearTimeout(timer);
-        }, []);
+        this.setState({ timer });
+    }
 
-    return(
-        <View className="flex-1 bg-[#002932] justify-center items-center">
-            <StatusBar barStyle="light-content" backgroundColor="#002932"/>
+    componentWillUnmount() {
+        const { timer } = this.state;
+        if (timer) {
+            clearTimeout(timer);
+        }
+    }
+
+    render() {
+        return (
+            <View className="flex-1 bg-[#002932] justify-center items-center">
+                <StatusBar barStyle="light-content" backgroundColor="#002932" />
                 <Image
-                source={require('../assets/light-logo.png')}
-                className="w-48 h-48"
-                resizeMode="contain"
+                    source={require('../assets/light-logo.png')}
+                    className="w-48 h-48"
+                    resizeMode="contain"
                 />
-        </View>
-    );
-};
+            </View>
+        );
+    }
+}
 
 export default PreLogin;

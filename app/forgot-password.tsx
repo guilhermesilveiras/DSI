@@ -1,50 +1,52 @@
-import { Image, Pressable, SafeAreaView, ScrollView, Text, View } from "react-native";
-import Icon from "@expo/vector-icons/FontAwesome6";
-import { useState } from "react";
-import { InputText } from "../components/login/inputText";
-import { ButtonInput } from "../components/login/button";
+import React, { Component } from "react";
+import { SafeAreaView, ScrollView } from "react-native";
 import { router } from "expo-router";
+import { Header } from "../components/forgot-passowrd/header";
+import { Body } from "../components/forgot-passowrd/body";
 
-export default function ForgotPassword() {
+interface ForgotPasswordState {
+    email: string;
+}
 
-    const [email, setEmail] = useState('')
-    
-    const handleBackButton = ()=> {
-        router.navigate('/')
+class ForgotPassword extends Component<{}, ForgotPasswordState> {
+    constructor(props: {}) {
+        super(props);
+        this.state = {
+            email: "",
+        };
     }
 
-    return (
-        <ScrollView>
-            <SafeAreaView className="w-full py-12 px-8 bg-background">
-                <View className="flex-row items-center gap-4">
-                    <Pressable onPress={handleBackButton}>
-                        <Icon name="arrow-left" size={22} color={"#024554"} />
-                    </Pressable>
-                    <Text className="text-2xl text-secondary font-semibold">
-                        Esqueci a senha
-                    </Text>
-                </View>
-                <View className="w-full h-full justify-center items-center">
-                    <Image
-                        className="h-96 w-80"
-                        source={require("../assets/forgot-password-img.png")}
-                        resizeMode="contain"
+    handleBackButton = (): void => {
+        router.navigate("/sign-in");
+    };
+
+    handlePress = (): void => {
+        // Implementar a lógica para envio de recuperação de senha
+    };
+
+    setEmail = (email: string): void => {
+        this.setState({ email });
+    };
+
+    render() {
+        const { email } = this.state;
+
+        return (
+            <ScrollView>
+                <SafeAreaView className="w-full py-12 px-8 bg-background">
+                    <Header
+                        label="Esqueci a senha"
+                        handleBack={this.handleBackButton}
                     />
-                    <Text className="text-3xl font-semibold text-center text-secondary">
-                        Esqueceu a senha?
-                    </Text>
-                    <Text className="text-lg font-semibold text-center text-secondary mt-6 mb-10">
-                        Confirme seu e-mail para receber o código de confirmação
-                    </Text>
-                    <InputText
-                        label="Endereço de email"
-                        placeholder="Endereço de email"
-                        value={email}
-                        setValue={e=> setEmail(e)}
-                        />
-                    <ButtonInput route="/" label="Confirmar Email"/>
-                </View>
-            </SafeAreaView>
-        </ScrollView>
-    );
+                    <Body
+                        email={email}
+                        setEmail={this.setEmail}
+                        handlePress={this.handlePress}
+                    />
+                </SafeAreaView>
+            </ScrollView>
+        );
+    }
 }
+
+export default ForgotPassword;

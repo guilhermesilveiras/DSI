@@ -1,64 +1,90 @@
-import { useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-  ZoomIn,
-  ZoomOut,
+    SlideInLeft,
+    SlideOutRight,
+    useAnimatedStyle,
+    useSharedValue,
+    withTiming,
+    runOnJS,
 } from "react-native-reanimated";
-import { wishListType } from "../../types/wish-list";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import Icon from "@expo/vector-icons/Feather";
 
 type Props = {
-  id: string;
-  city: string;
-  date: string;
-  handleDelete: (key: string) => void;
-  handleEdit: (item: wishListType) => void
+    id: string;
+    city: string;
+    date: string;
+    handleDelete: (key: string) => void;
+    handleEdit: (item: any) => void;
 };
 
 export const ListCard = ({ id, city, date, handleDelete, handleEdit }: Props) => {
-  const [open, setOpen] = useState(false);
-  const configHeight = useSharedValue(0);
+    const cardOpacity = useSharedValue(1);
+    const translateX = useSharedValue(0);
 
-  const configStyle = useAnimatedStyle(() => ({
-    height: withTiming(configHeight.value, { duration: 100 }),
-  }));
+    const handleCityLength = (city: string) => {
+        if (city.length < 9) return city;
 
-  const handlePress = () => {
-    configHeight.value = open ? 0 : 28;
-    setOpen(!open);
-  };
+        const newCity = city.split("").slice(0, 10).join("");
+        return `${newCity}-`;
+    };
 
-  return (
-    <Animated.View
-      entering={ZoomIn}
-      exiting={ZoomOut}
-      className="bg-zinc-200 rounded-2xl p-4 border border-tertiary mb-6"
-    >
-      <Pressable onPress={handlePress}>
-        <Text className="text-xl font-semibold">{city}</Text>
-        <Text className="text-sm text-zinc-500">{date}</Text>
+    const animatedStyle = useAnimatedStyle(() => ({
+        transform: [{ translateX: translateX.value }],
+        opacity: cardOpacity.value,
+    }));
 
-        <Animated.View style={configStyle} className="flex-row items-center justify-center">
-        <Pressable
-            accessible={true}
-            accessibilityLabel="Editar"
-            onPress={() => handleEdit({id, wish: city, date})}
-            className="text-md items-center justify-center flex-1"
-          >
-            <Text>Editar</Text>
-          </Pressable>
-          <Pressable
-            accessible={true}
-            accessibilityLabel="Excluir"
-            onPress={() => handleDelete(id)}
-            className="text-md items-center justify-center flex-1"
-          >
-            <Text>Excluir</Text>
-          </Pressable>
-        </Animated.View>
-      </Pressable>
-    </Animated.View>
-  );
+    const panGesture = Gesture.Pan()
+        .onUpdate((event) => {
+            translateX.value = event.translationX;
+        })
+        .onEnd(() => {
+            if (translateX.value > 150) {
+                // Excluir o item se for arrastado o suficiente
+                runOnJS(handleDelete)(id); // Chamar a função de exclusão
+                translateX.value = withTiming(300, { duration: 200 }, () => {
+                    cardOpacity.value = withTiming(0, { duration: 200 });
+                });
+            } else {
+                // Retornar à posição inicial
+                translateX.value = withTiming(0, { duration: 200 });
+            }
+        });
+
+    return (
+        <GestureDetector gesture={panGesture}>
+            <Animated.View
+                style={animatedStyle}
+                entering={SlideInLeft}
+                exiting={SlideOutRight}
+                className="w-60 h-60 rounded-3xl bg-secondary m-auto justify-center items-center mb-4"
+            >
+                <View className="gap-4">
+                    <View>
+                        <Text className="text-4xl font-semibold text-white text-center">
+                            {handleCityLength(city)}
+                        </Text>
+                        <Text className="text-sm text-white text-center">
+                            {date}
+                        </Text>
+                    </View>
+                    <TouchableOpacity className="bg-white rounded-xl w-32 py-2 mx-auto">
+                        <Text className="text-center text-tertiary font-semibold">
+                            Planejar
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+                <View className="flex-row items-center justify-end mt-4">
+                    <TouchableOpacity
+                        accessible={true}
+                        accessibilityLabel="Editar"
+                        onPress={() => handleEdit({ id, wish: city, date })}
+                        className="rounded-xl relative p-4 -mt-80 ml-44"
+                    >
+                        <Icon name="edit" color={"white"} size={20} />
+                    </TouchableOpacity>
+                </View>
+            </Animated.View>
+        </GestureDetector>
+    );
 };

@@ -1,22 +1,27 @@
+import React, { Component } from "react";
 import { SafeAreaView, ScrollView } from "react-native";
-import { NavBar } from "../components/main/navBar";
+import { NavBar } from "../components/main/nav-bar";
 import { Welcome } from "../components/main/welcome";
-import { SearchPrice } from "../components/for-you/searchPrice";
-import { SugestionsForYou } from "../components/for-you/suggestionsForYou";
-import { OtherRoutes } from "../components/for-you/otherRoutes";
+import { SearchPrice } from "../components/for-you/search-price";
+import { SugestionsForYou } from "../components/for-you/suggestions-for-you";
+import { OtherRoutes } from "../components/for-you/other-routes";
 import { Header } from "../components/main/header";
 
-export default function ForYou () {
-    return(
-        <ScrollView>
-            <SafeAreaView className="pb-10 bg-background">
-                <Header/>
-                <Welcome name="fulano"/>
-                <NavBar page="for-you"/>
-                <SearchPrice/>
-                <SugestionsForYou/>
-                <OtherRoutes/>
-            </SafeAreaView>
-        </ScrollView>
-    )
+class ForYou extends Component {
+    render() {
+        return (
+            <ScrollView>
+                <SafeAreaView className="pb-10 bg-background">
+                    <Header />
+                    <Welcome />
+                    <NavBar page="for-you" />
+                    <SearchPrice />
+                    <SugestionsForYou />
+                    <OtherRoutes />
+                </SafeAreaView>
+            </ScrollView>
+        );
+    }
 }
+
+export default ForYou;

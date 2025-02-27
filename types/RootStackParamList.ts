@@ -1,3 +1,0 @@
-type RootStackParamList = {
-    Index: undefined;
-}

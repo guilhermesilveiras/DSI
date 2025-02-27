@@ -1,24 +1,22 @@
-import { initializeApp } from 'firebase/app';
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 
-// Optionally import the services that you want to use
-// import {...} from "firebase/auth";
-// import {...} from "firebase/database";
-// import {...} from "firebase/firestore";
-// import {...} from "firebase/functions";
-// import {...} from "firebase/storage";
-
-// Initialize Firebase
+// Configuração do Firebase
 const firebaseConfig = {
-  apiKey: 'api-key',
-  authDomain: 'project-id.firebaseapp.com',
-  databaseURL: 'https://project-id.firebaseio.com',
-  projectId: 'project-id',
-  storageBucket: 'project-id.appspot.com',
-  messagingSenderId: 'sender-id',
-  appId: 'app-id',
-  measurementId: 'G-measurement-id',
+  apiKey: "AIzaSyDe4GjTCqlQI4S_0-Z0TOL3B6HlASFNdS4",
+  authDomain: "atlas-22895.firebaseapp.com",
+  databaseURL: "https://atlas-22895-default-rtdb.firebaseio.com",
+  projectId: "atlas-22895",
+  storageBucket: "atlas-22895.firebasestorage.app",
+  messagingSenderId: "685620884774",
+  appId: "1:685620884774:web:1d692b67f962aff5d37de7",
+  measurementId: "G-FEP7GWT5FN"
 };
 
+// Inicializa o Firebase
 const app = initializeApp(firebaseConfig);
-// For more information on how to access Firebase in your project,
-// see the Firebase documentation: https://firebase.google.com/docs/web/setup#access-firebase
+
+// Inicializa os serviços necessários
+export const auth = getAuth(app); // Firebase Authentication
+export const db = getFirestore(app); // Firestore

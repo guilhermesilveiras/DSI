@@ -1,5 +1,5 @@
-export type wishListType = {
-    id: string
-    wish: string,
-    date: string
-}
+type WishListItem = {
+    id: string;
+    wish: string;
+    date: string;
+};
