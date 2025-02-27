@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import { ImageBackground, Text, TouchableOpacity, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { router } from "expo-router";
-import { CardType } from "../../types/card";
+import { CityType } from "../../types/city";
 
-type Props = CardType;
+type Props = CityType;
 
 export class SmallCard extends Component<Props> {
     handlePress = () => {
@@ -13,12 +13,12 @@ export class SmallCard extends Component<Props> {
     };
 
     render() {
-        const { city, img } = this.props;
+        const { cityPt, img, country} = this.props;
         const imageUrl = img;
 
         return (
             <TouchableOpacity 
-                className="w-full sm:w-44 h-44 rounded-3xl overflow-hidden"
+                className="w-full sm:w-44 h-44 rounded-3xl overflow-hidden mb-4 mx-auto"
                 onPress={this.handlePress}
             >
                 <ImageBackground source={{ uri: imageUrl }} className="w-full h-full">
@@ -28,7 +28,10 @@ export class SmallCard extends Component<Props> {
                     >
                         <View className="m-3">
                             <Text className="text-white font-semibold text-lg">
-                                {city}
+                                {cityPt}
+                            </Text>
+                            <Text className="text-white font-bold text-lg">
+                                📍{country}
                             </Text>
                         </View>
                     </LinearGradient>

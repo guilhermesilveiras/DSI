@@ -1,18 +1,25 @@
 import React, { Component } from "react";
 import { SafeAreaView, ScrollView } from "react-native";
 import { router } from "expo-router";
+import { getAuth, sendPasswordResetEmail } from "firebase/auth";
 import { Header } from "../components/forgot-passowrd/header";
 import { Body } from "../components/forgot-passowrd/body";
 
 interface ForgotPasswordState {
     email: string;
+    error: string;
+    success: string
 }
 
 class ForgotPassword extends Component<{}, ForgotPasswordState> {
+    private auth = getAuth();
+
     constructor(props: {}) {
         super(props);
         this.state = {
             email: "",
+            error: "",
+            success: ""
         };
     }
 
@@ -20,8 +27,21 @@ class ForgotPassword extends Component<{}, ForgotPasswordState> {
         router.navigate("/sign-in");
     };
 
-    handlePress = (): void => {
-        // Implementar a lógica para envio de recuperação de senha
+    handlePress = async (): Promise<void> => {
+        const { email } = this.state;
+
+        if (!email) {
+            this.setState({error: "missing-email"})
+            return;
+        }
+
+        try {
+            await sendPasswordResetEmail(this.auth, email);
+            this.setState({error: ''})
+            this.setState({success: 'success-fg-password'})
+        } catch (error) {
+            this.setState({error: 'invalid-email'})
+        }
     };
 
     setEmail = (email: string): void => {
@@ -29,7 +49,7 @@ class ForgotPassword extends Component<{}, ForgotPasswordState> {
     };
 
     render() {
-        const { email } = this.state;
+        const { email, error, success } = this.state;
 
         return (
             <ScrollView>
@@ -42,6 +62,8 @@ class ForgotPassword extends Component<{}, ForgotPasswordState> {
                         email={email}
                         setEmail={this.setEmail}
                         handlePress={this.handlePress}
+                        error={error}
+                        success={success}
                     />
                 </SafeAreaView>
             </ScrollView>

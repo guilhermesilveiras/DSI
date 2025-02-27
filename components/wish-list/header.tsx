@@ -11,10 +11,10 @@ export class Header extends React.Component {
     render() {
         return (
             <View className="w-full flex-row items-center justify-between py-4 px-10">
-                <TouchableOpacity onPress={this.handleBack}>
+                <TouchableOpacity onPress={this.handleBack} className="px-2 py-2">
                     <Icon name="arrow-left-long" size={22} color={"#024554"} />
                 </TouchableOpacity>
-                <Text className="text-2xl text-secondary font-semibold">
+                <Text className="text-2xl text-secondary font-semibold -ml-6">
                     Lista de desejos
                 </Text>
                 <View></View>

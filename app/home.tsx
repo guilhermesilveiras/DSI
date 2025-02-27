@@ -1,25 +1,33 @@
 import React, { Component } from "react";
-import { SafeAreaView, ScrollView } from "react-native";
+import { SafeAreaView, View, FlatList } from "react-native";
 import { Welcome } from "../components/main/welcome";
 import { NavBar } from "../components/main/nav-bar";
-import { Search } from "../components/home/search";
+import { Header } from "../components/main/header";
 import { Sugestions } from "../components/home/suggestions";
 import { MostVisited } from "../components/home/most-visited";
-import { Header } from "../components/main/header";
 
 class Home extends Component {
     render() {
+        const sections = ["mostVisited", "sugestions"];
+
         return (
-            <ScrollView>
-                <SafeAreaView className="pb-10 bg-background">
-                    <Header />
-                    <Welcome />
-                    <NavBar page="home" />
-                    <Search />
-                    <Sugestions />
-                    <MostVisited />
-                </SafeAreaView>
-            </ScrollView>
+            <SafeAreaView className="flex-1 bg-background">
+                <FlatList
+                    data={sections}
+                    keyExtractor={(item) => item}
+                    renderItem={({ item }) =>
+                        item === "mostVisited" ? <MostVisited /> : <Sugestions />
+                    }
+                    ListHeaderComponent={() => (
+                        <View>
+                            <Header />
+                            <Welcome />
+                            <NavBar page="home" />
+                        </View>
+                    )}
+                    contentContainerStyle={{ paddingBottom: 20 }}
+                />
+            </SafeAreaView>
         );
     }
 }

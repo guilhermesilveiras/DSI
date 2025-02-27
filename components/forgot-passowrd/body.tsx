@@ -1,17 +1,19 @@
 import React, { Component } from "react";
 import { Image, Text, View } from "react-native";
-import { InputText } from "../login/input-text";
+import { InputText } from "../login/text-input";
 import { ButtonInput } from "../login/button";
 
 interface Props {
     email: string;
     setEmail: (s: string) => void;
     handlePress: () => void;
+    error: string
+    success: string
 }
 
 export class Body extends Component<Props> {
     render() {
-        const { email, setEmail, handlePress } = this.props;
+        const { email, setEmail, handlePress, error, success } = this.props;
 
         return (
             <View className="w-full h-full justify-center items-center">
@@ -31,6 +33,8 @@ export class Body extends Component<Props> {
                     placeholder="Endereço de email"
                     value={email}
                     setValue={setEmail}
+                    error={error}
+                    success={success}
                 />
                 <ButtonInput onPress={handlePress} label="Confirmar Email" />
             </View>

@@ -1,101 +1,125 @@
-import { Image, Pressable, SafeAreaView, ScrollView, Text, View, TouchableOpacity, Switch } from 'react-native';
-import { Header } from '../components/main/header';
-import { auth } from '../services/firebase';
-import { signOut } from 'firebase/auth';
-import { router } from 'expo-router';
-import { NavButton } from '../components/main/navButton';
-import React, { useState } from 'react';
-import FeatherIcon from 'react-native-vector-icons/Feather';
+import { SafeAreaView, ScrollView, View, ActivityIndicator, TouchableOpacity, Text } from "react-native";
+import { BackHeader } from "../components/main/back-header";
+import { router } from "expo-router";
+import Icon from "@expo/vector-icons/FontAwesome6";
+import { Component } from "react";
+import { getFirestore } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { ButtonInput } from "../components/login/button";
+import { InputText } from "../components/login/text-input";
+import { fetchContinentsAndCountries } from "../services/api";
+import { fetchUserData, handleDeleteAccount, handleSaveAccount } from "../services/firestore-service";
 
-interface FormState {
-  pushNotifications: boolean;
+type State = {
+    email: string;
+    userName: string;
+    continent: string;
+    country: string;
+    errorName: string;
+    errorCountry: string;
+    errorContinent: string;
+    isLoading: "initial" | "loading" | "check";
+    validContinents: any[];
+    validCountries: any[];
+};
+
+class Profile extends Component<{}, State> {
+    private db = getFirestore();
+    private auth = getAuth();
+
+    constructor(props: {}) {
+        super(props);
+        this.state = {
+            email: "",
+            userName: "",
+            continent: "",
+            country: "",
+            errorName: "",
+            errorCountry: "",
+            errorContinent: "",
+            isLoading: "initial",
+            validContinents: [],
+            validCountries: []
+        };
+    }
+
+    componentDidMount(): void {
+        fetchUserData({
+            setEmail: (email) => this.setState({ email }),
+            setUserName: (userName) => this.setState({ userName }),
+            setContinent: (continent) => this.setState({ continent }),
+            setCountry: (country) => this.setState({ country })
+        });
+        fetchContinentsAndCountries({
+            setValidContinents: (validContinents) => this.setState({ validContinents }),
+            setValidCountries: (validCountries) => this.setState({ validCountries })
+        });
+    }
+
+    handleBack = () => {
+        router.navigate("/home");
+    };
+
+    render() {
+        const { email, userName, continent, country, errorName, errorContinent, errorCountry, isLoading, validContinents, validCountries } = this.state;
+
+        return (
+            <ScrollView>
+                <SafeAreaView className="items-center">
+                    <BackHeader mode="primary" city="perfil" handleBack={this.handleBack} />
+
+                    {isLoading === "initial" && errorName !== "20-caracters" && (
+                        <View className="mt-12 px-12">
+                            <Icon name="user-large" size={120} color="#024554" />
+                        </View>
+                    )}
+                    {isLoading === "loading" && (
+                        <View className="mt-12 px-12">
+                            <ActivityIndicator size={120} color={"#024554"} />
+                        </View>
+                    )}
+                    {isLoading === "check" && errorName !== "20-caracters" && (
+                        <View className="mt-12 px-12">
+                            <Icon name="user-check" size={120} color="#024554" />
+                        </View>
+                    )}
+                    {isLoading !== "loading" && errorName === "20-caracters" && (
+                        <View className="mt-12 px-12">
+                            <Icon name="user-xmark" size={120} color="#024554" />
+                        </View>
+                    )}
+
+                    <View className="mt-6 px-10 items-center">
+                        <InputText label="Email" placeholder="" value={email} setValue={(email) => this.setState({ email })} editable={false} />
+                        <InputText label="Nome de usuário" placeholder="" value={userName} setValue={(userName) => this.setState({ userName })} error={errorName} />
+                        <InputText label="Continente de Interesse" placeholder="Ex: Europa" value={continent} setValue={(continent) => this.setState({ continent })} error={errorContinent} />
+                        <InputText label="País de Interesse" placeholder="Ex: França" value={country} setValue={(country) => this.setState({ country })} error={errorCountry} />
+                        <ButtonInput
+                            label="Confirmar alterações"
+                            onPress={() => handleSaveAccount({
+                                email,
+                                userName,
+                                continent,
+                                country,
+                                validContinents,
+                                validCountries,
+                                setErrorName: (errorName) => this.setState({ errorName }),
+                                setErrorContinent: (errorContinent) => this.setState({ errorContinent }),
+                                setErrorCountry: (errorCountry) => this.setState({ errorCountry }),
+                                setIsLoading: (isLoading) => this.setState({ isLoading })
+                            })}
+                        />
+                        <TouchableOpacity
+                            onPress={() => handleDeleteAccount({ setIsLoading: (isLoading) => this.setState({ isLoading }) })}
+                            className="px-6 py-2 bg-zinc-300 rounded-lg mt-6"
+                        >
+                            <Text className="text-red-500 font-semibold">Excluir conta</Text>
+                        </TouchableOpacity>
+                    </View>
+                </SafeAreaView>
+            </ScrollView>
+        );
+    }
 }
 
-export default function Profile() {
-  const [form, setForm] = useState<FormState>({
-    pushNotifications: false,
-  });
-
-  return (
-    <SafeAreaView className="flex-1 bg-white">
-    <Header/>
-      <View className="p-6 bg-white items-center justify-center">
-        <TouchableOpacity onPress={() => {}}>
-          <View className="relative">
-            <Image
-              className="w-18 h-18 rounded-full"
-              source={{ uri: 'https://i.pravatar.cc/300',}}/>
-            <TouchableOpacity onPress={() => {}}>
-              <View className="absolute -right-1 -bottom-2.5 w-7 h-7 rounded-full bg-primary items-center justify-center">
-                <FeatherIcon name="edit-3" size={15} color="white" />
-              </View>
-            </TouchableOpacity>
-          </View>
-        </TouchableOpacity>
-
-        <View className="items-center">
-          <Text className="mt-5 text-[19px] font-semibold text-gray-500">
-            Teste
-          </Text>
-          <Text className="mt-1 text-base text-gray-500">
-            teste@gmail.com
-          </Text>
-        </View>
-      </View>
-
-      <ScrollView>
-        <View className="px-6">
-          <Text className="py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-            Preferências
-          </Text>
-
-          <TouchableOpacity className="flex-row items-center h-[50px] bg-gray-200 rounded-lg mb-3 px-3">
-            <View className="w-8 h-8 rounded-full bg-primary items-center justify-center mr-3">
-              <FeatherIcon name="globe" size={20} color="white" />
-            </View>
-            <Text className="text-[17px] text-black">Idioma</Text>
-            <View className="flex-1" />
-            <FeatherIcon name="chevron-right" size={20} color="#C6C6C6" />
-          </TouchableOpacity>
-
-          <View className="flex-row items-center h-[50px] bg-gray-200 rounded-lg mb-3 px-3">
-            <View className="w-8 h-8 rounded-full bg-primary items-center justify-center mr-3">
-              <FeatherIcon name="moon" size={20} color="white" />
-            </View>
-            <Text className="text-[17px] text-black">Modo Escuro</Text>
-            <View className="flex-1" />
-            <Switch
-              trackColor={{ false: '#d1d1d6', true: '#34c759' }}
-              thumbColor={form.darkMode ? '#fff' : '#f4f3f4'}
-              onValueChange={(darkMode) => setForm({ ...form, darkMode })}
-              value={form.darkMode}
-            />
-          </View>
-
-          <TouchableOpacity className="flex-row items-center h-[50px] bg-gray-200 rounded-lg mb-3 px-3">
-            <View className="w-8 h-8 rounded-full bg-primary items-center justify-center mr-3">
-              <FeatherIcon name="navigation" size={20} color="white" />
-            </View>
-            <Text className="text-[17px] text-black">Localização</Text>
-            <View className="flex-1" />
-            <FeatherIcon name="chevron-right" size={20} color="#C6C6C6" />
-          </TouchableOpacity>
-
-          <View className="flex-row items-center h-[50px] bg-gray-200 rounded-lg mb-3 px-3">
-            <View className="w-8 h-8 rounded-full bg-primary items-center justify-center mr-3">
-              <FeatherIcon name="bell" size={20} color="white" />
-            </View>
-            <Text className="text-[17px] text-black">Ativar Notificações</Text>
-            <View className="flex-1" />
-            <Switch
-              trackColor={{ false: '#d1d1d6', true: '#34c759' }}
-              thumbColor={form.pushNotifications ? '#fff' : '#f4f3f4'}
-              onValueChange={(pushNotifications) => setForm({ ...form, pushNotifications })}
-              value={form.pushNotifications}
-            />
-          </View>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
-}
+export default Profile;

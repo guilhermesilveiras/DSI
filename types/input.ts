@@ -9,4 +9,6 @@ export type InputType = {
         setShowPassord: (b: boolean) => void
     },
     setValue: (s: string) => void
+    editable?: boolean
+    success?: string
 } 

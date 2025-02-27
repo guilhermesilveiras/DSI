@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { Component } from "react";
 import { ScrollView, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
-import { data } from "../../data/temp";
 import { HeaderDetail } from "../../components/details/header";
 import { Title } from "../../components/details/title";
 import { Description } from "../../components/details/description";
@@ -9,83 +8,101 @@ import { Bar } from "../../components/details/bar";
 import { Widget } from "../../components/details/widget";
 import { Prices } from "../../components/details/prices";
 import { Button } from "../../components/details/button";
-
-// Firebase imports
 import { getFirestore, doc, setDoc, collection } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
+import { fetchCityData } from "../../services/api";
+import { CityType } from "../../types/city";
 
-interface Item {
-    id: string;
-    img: string;
-    country?: string;
-    city: string;
+interface CityDetailsProps {
+    path: string;
 }
 
-const Details = () => {
-    const { path } = useLocalSearchParams();
-    const [item, setItem] = useState<Item | undefined>(undefined);
+interface CityDetailsState {
+    item?: CityType;
+}
 
-    const db = getFirestore();
-    const auth = getAuth();
-    const user = auth.currentUser;
+class CityDetails extends Component<CityDetailsProps, CityDetailsState> {
+    private db = getFirestore();
+    private auth = getAuth();
+    private user = this.auth.currentUser;
 
-    useEffect(() => {
-        if (path) {
-            const foundItem = data.find((i) => i.id === path);
-            setItem(foundItem);
-        }
-    }, [path]);
+    constructor(props: CityDetailsProps) {
+        super(props);
+        this.state = { item: undefined };
+    }
 
-    const handleBackButton = (): void => {
+    componentDidMount(): void {
+        fetchCityData({ path: this.props.path, setItem: (item: CityType) => this.setState({ item }) });
+    }
+
+    private handleBackButton = (): void => {
         router.back();
     };
 
-    const handlePlan = async (): Promise<void> => {
-        if (!user || !item) return;
+    private handlePlan = async (): Promise<void> => {
+        const { item } = this.state;
+        if (!this.user || !item) return;
 
         try {
-            // Criando um ID único para cada viagem
-            const travelRef = doc(collection(db, `travelers/${user.email}/travels`));
-            const travelId = travelRef.id;
-
-            // Criando um novo documento de viagem no Firestore
-            await setDoc(travelRef, {
-                travelId,
-                city: item.city,
-                dates: {}, // Inicializa os gastos vazios
+            const tripRef = doc(collection(this.db, `travelers/${this.user.email}/trips`));
+            const tripId = tripRef.id;
+            await setDoc(tripRef, {
+                tripId,
+                city: item.cityPt,
+                dates: {},
             });
-            // Redireciona para a tela de planejamento usando o nome da cidade
             router.push({
-                pathname: "/planning/[city]/[travelId]",
-                params: { city: item.city, travelId }
+                pathname: "/planning/[city]/[tripId]",
+                params: { city: item.cityPt, tripId },
             });
         } catch (error) {
             console.error("Erro ao criar a viagem:", error);
         }
     };
 
-    return (
-        <ScrollView>
-            <HeaderDetail
-                img={item?.img || ""}
-                city={item?.city || ""}
-                handleBack={handleBackButton}
-            />
-            <View className="w-full h-full px-8 py-12 bg-zinc-100 -mt-12 rounded-t-[50px]">
-                <Title label="Descrição" />
-                <Description label="Lorem Ipsum is simply dummy text of the printing and typesetting industry." />
-                <Bar />
-                <Title label="Gastos aproximados por dia:" />
-                <View className="w-full flex-row justify-center gap-8 mb-4">
-                    <Widget label="U$ 78,83" />
-                    <Widget label="$$$" />
+    private handleShowLocation = (): void => {
+        const { item } = this.state;
+        router.push({
+            pathname: "/map/[path]",
+            params: { path: item?.id },
+        });
+    };
+
+    render() {
+        const { item } = this.state;
+        return (
+            <ScrollView>
+                <HeaderDetail
+                    img={item?.img || ""}
+                    city={item?.cityPt || ""}
+                    handleBack={this.handleBackButton}
+                />
+                <View className="w-full h-full px-8 py-12 bg-zinc-100 -mt-12 rounded-t-[50px]">
+                    <Title label="Descrição" />
+                    <Description label={item?.description || "Sem descrição disponível."} />
+                    <Bar />
+                    <Title label="Gastos aproximados por refeição:" />
+                    <View className="w-full flex-row justify-center gap-8 mb-4">
+                        <Widget label={`U$ ${item?.prices?.localFood.toFixed(2) || "0.00"}`} />
+                        <Widget label={`U$ ${item?.prices?.fastFood.toFixed(2) || "0.00"}`} />
+                    </View>
+                    <View className="hidden invisible">
+                        <Title label="Preços mais pesquisados:" />
+                        <Prices />
+                    </View>
+                    <View className="mt-16 gap-5">
+                        <Button label={`Ver localização de ${item?.cityPt}`} handleAction={this.handleShowLocation} />
+                        <Button label={`Planejar viagem para ${item?.cityPt}`} handleAction={this.handlePlan} />
+                    </View>
                 </View>
-                <Title label="Preços mais pesquisados:" />
-                <Prices />
-                <Button city={item?.city || ""} handleAction={handlePlan} />
-            </View>
-        </ScrollView>
-    );
+            </ScrollView>
+        );
+    }
+}
+
+const CityDetailsWrapper = () => {
+    const { path } = useLocalSearchParams();
+    return <CityDetails path={path as string} />;
 };
 
-export default Details;
+export default CityDetailsWrapper;
