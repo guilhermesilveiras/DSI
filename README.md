@@ -1,6 +1,7 @@
 # Desenvolvimento para Sistemas de Informação: ATLAS
 
 
+![atlaslogo](https://github.com/user-attachments/assets/7066ab9a-b24c-4d31-bb79-636333740061)
 
 
 ## Objetivo do Projeto
